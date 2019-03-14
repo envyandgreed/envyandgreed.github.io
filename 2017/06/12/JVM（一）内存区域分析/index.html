@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="运行时数据区域Java虚拟机会在运行时Java程序时把它所管理的区域的内存划分为若干不同的数据区域，大体上分为两个部分，一部分由所有线程共享包括方法区和堆，另一部分为线程所私有包括虚拟机栈，本地方法栈，程序计数器。如下图所示：  程序计数器是一块较小的内存空间，可以看作是当前线程所执行的字节码的行号指示器。它是为了线程切换后能恢复到正确的执行位置，每一条线程都有一个独立的程序计数器。 如果线程执行">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java内存区域与内存溢出异常">
+<meta property="og:url" content="http://sihan.world/2017/06/12/JVM（一）内存区域分析/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="运行时数据区域Java虚拟机会在运行时Java程序时把它所管理的区域的内存划分为若干不同的数据区域，大体上分为两个部分，一部分由所有线程共享包括方法区和堆，另一部分为线程所私有包括虚拟机栈，本地方法栈，程序计数器。如下图所示：  程序计数器是一块较小的内存空间，可以看作是当前线程所执行的字节码的行号指示器。它是为了线程切换后能恢复到正确的执行位置，每一条线程都有一个独立的程序计数器。 如果线程执行">
+<meta property="og:locale" content="en-US">
+<meta property="og:image" content="http://sihan.world/img/jvm1-1.png">
+<meta property="og:image" content="http://sihan.world/img/jvm1-2.jpeg">
+<meta property="og:image" content="http://sihan.world/img/jvm1-3.jpeg">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java内存区域与内存溢出异常">
+<meta name="twitter:description" content="运行时数据区域Java虚拟机会在运行时Java程序时把它所管理的区域的内存划分为若干不同的数据区域，大体上分为两个部分，一部分由所有线程共享包括方法区和堆，另一部分为线程所私有包括虚拟机栈，本地方法栈，程序计数器。如下图所示：  程序计数器是一块较小的内存空间，可以看作是当前线程所执行的字节码的行号指示器。它是为了线程切换后能恢复到正确的执行位置，每一条线程都有一个独立的程序计数器。 如果线程执行">
+<meta name="twitter:image" content="http://sihan.world/img/jvm1-1.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java内存区域与内存溢出异常</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/06/13/Java垃圾回收机制/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/06/10/搞个多线程（五）/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/12/JVM（一）内存区域分析/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&text=Java内存区域与内存溢出异常"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&is_video=false&description=Java内存区域与内存溢出异常"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java内存区域与内存溢出异常&body=Check out this article: http://sihan.world/2017/06/12/JVM（一）内存区域分析/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&name=Java内存区域与内存溢出异常&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行时数据区域"><span class="toc-number">1.</span> <span class="toc-text">运行时数据区域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#程序计数器"><span class="toc-number">1.1.</span> <span class="toc-text">程序计数器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java虚拟机栈"><span class="toc-number">1.2.</span> <span class="toc-text">Java虚拟机栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地方法栈"><span class="toc-number">1.3.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java堆"><span class="toc-number">1.4.</span> <span class="toc-text">Java堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法区"><span class="toc-number">1.5.</span> <span class="toc-text">方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行时常量池"><span class="toc-number">1.6.</span> <span class="toc-text">运行时常量池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接内存"><span class="toc-number">1.7.</span> <span class="toc-text">直接内存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象的分配、布局、访问"><span class="toc-number">2.</span> <span class="toc-text">对象的分配、布局、访问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的创建"><span class="toc-number">2.1.</span> <span class="toc-text">对象的创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的内存分布"><span class="toc-number">2.2.</span> <span class="toc-text">对象的内存分布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的访问定位"><span class="toc-number">2.3.</span> <span class="toc-text">对象的访问定位</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常产生情况分析"><span class="toc-number">3.</span> <span class="toc-text">异常产生情况分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java堆溢出"><span class="toc-number">3.1.</span> <span class="toc-text">Java堆溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#虚拟机栈和本地方法栈溢出"><span class="toc-number">3.2.</span> <span class="toc-text">虚拟机栈和本地方法栈溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法区和运行时常量池溢出"><span class="toc-number">3.3.</span> <span class="toc-text">方法区和运行时常量池溢出</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java内存区域与内存溢出异常
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-06-12T02:11:28.000Z" itemprop="datePublished">2017-06-12</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/JVM/">JVM</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><p>Java虚拟机会在运行时Java程序时把它所管理的区域的内存划分为若干不同的数据区域，大体上分为两个部分，一部分由所有线程共享包括方法区和堆，另一部分为线程所私有包括虚拟机栈，本地方法栈，程序计数器。如下图所示：</p>
+<p><img src="/img/jvm1-1.png" alt="jvm1"></p>
+<h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>是一块较小的内存空间，可以看作是当前线程所执行的字节码的行号指示器。它是为了线程切换后能恢复到正确的执行位置，每一条线程都有一个独立的程序计数器。</p>
+<p>如果线程执行的是Java方法，这个计数器记录的是正在执行的虚拟机字节码指令地址：如果正在执行的是Native方法，这个计数器值则为空。</p>
+<p>此内存区域是唯一一个在Java虚拟机规范中没有规定OutOfMemoryError情况的区域。</p>
+<h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><p>同样为线程私有，生命周期与线程相同。</p>
+<p>虚拟机栈描述的是Java方法执行的内存模型：每个方法在执行的时候都会创建一个栈帧，用于存储局部变量表，操作数栈，动态链接，方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中入栈到出栈的过程。</p>
+<p>很多教程会把Java内存区分为堆内存和栈内存，这种分类方法其实比较粗糙，这里所说的栈其实就是指虚拟机栈，或者说是虚拟机栈中局部变量表部分。</p>
+<p>局部变量表存放了编译时可知的8种基本数据类型、对象引用、returnAddress类型。局部变量表所需要的内存空间在编译器完成分配，在进入方法时，需要在帧中分配多大的的局部变量空间是完全确定的，运行时不会改变。</p>
+<p>局部变量表有两种异常状况：如果线程请求的栈深度大雨虚拟机允许的深度，则抛出StackOverFlowError异常；如果虚拟机栈可以动态扩展，并在扩展时无法申请到足够的内存，就会跑出OutOfMemory的异常。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>作用与虚拟机栈相似，他们的区别是：虚拟机栈为虚拟机执行Java方法服务，本地方法栈为虚拟机使用到的Native方法服务。同样它也会抛出StackOverFlow和OutOfMemory异常。</p>
+<h3 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h3><p>对大多数应用程序来说，Java堆是Java虚拟机所管理的内存中最大的一块。Java堆被所有线程共享，在虚拟机启动时创建，此内存区域唯一的目的就是存放对象实例，几乎所有的对象实例和数组都在这里分配。</p>
+<p>Java堆是垃圾收集器管理的主要区域，也被称为GC堆。</p>
+<p>Java堆可以是物理上的不连续的内存空间，只要逻辑上连续即可。在实现时，既可以是固定大小，也可以是拓展。如果在堆中没有内存完成实例分配，并且堆也无法再拓展时，将会抛出OutOfMemory异常。</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>和堆一样是各个线程共享的内存区域，存储已被虚拟机加载的类的信息、常量、静态变量、既是编辑器编译后的代码等数据。</p>
+<p>这个区域跟堆一样不需要连续内存并且可以选择固定大小和可拓展，还可以选择不实现垃圾收集，这个区域的内存回收主要是针对常量池的回收和对类型的卸载。当方法区无法满足内存分配需求时，将抛出OutOfMemoryError异常。</p>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>是方法区的一部分。Class文件除了有类版字段、方法、接口等描述信息外，还有一项信息是常量池，用于存放编译期生成的各种字面量和符号引用，这部分内容在类加载后进入方法区的运行时常量池中存放。</p>
+<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>直接内存并不是虚拟机运行时数据的一部分，但是这部分内存也被频繁使用，也可能导致OutOfMemoryError异常。</p>
+<p>JDK1.4中加入了NIO（New Input/Out ）类，引入了一种基于通道和缓冲区的I/O方式，可以使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作。这样能在一些场景中提高性能，避免了在Java堆和Native堆中来回复制数据。</p>
+<h2 id="对象的分配、布局、访问"><a href="#对象的分配、布局、访问" class="headerlink" title="对象的分配、布局、访问"></a>对象的分配、布局、访问</h2><h3 id="对象的创建"><a href="#对象的创建" class="headerlink" title="对象的创建"></a>对象的创建</h3><p>创建一个对象，在语言层面上仅仅是一个new的关键字。而当虚拟机遇到一条new的指令的时候，</p>
+<ul>
+<li><p>首先去检查这个指令参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过，如果没有则执行相应的类加载过程。</p>
+</li>
+<li><p>类加载检查之后，虚拟机为新对象分配内存，对象所需内存在类加载完成后便可完全确定。</p>
+<p>内存分配形式有两种：</p>
+<ul>
+<li>指针碰撞：如果Java堆中内存绝对规整，用过的放左边，没用过的放右边中间一个指针做为分界点的指示器，那么分配内存仅仅是把指针向空闲空间那边挪动一段与对象大小相同的距离。</li>
+<li>空闲列表：如果不是规整的，虚拟机必须维护一个列表，记录哪些内存时可用的，在分配时从列表中找到一块足够大的空间分配给对象，并更新列表上的记录。</li>
+</ul>
+<p>除了划分可用空间之外，还需要考虑到修改指针时的线程安全问题。可能出现在给对象A分配内存，指针还未修改，对象B有同时使用原来的指针分配内存的情况。</p>
+<p>解决这种问题有两种方案：</p>
+<ul>
+<li>对分配内存空间的动作进行同步处理，采用CAS配上失败重试方法保证失败操作的原子性。CAS机制就是乐观锁，synchronized是悲观锁，乐观锁是每次不加锁而是假设没有冲突而去完成某项操作，如果因为冲突失败就重试，直到成功为止。CAS有三个操作数，内存址V，旧预期值A和要修改的新值B，仅当A与V相等时，将V替换成B，其他时间什么都不做。</li>
+<li>把内存分配的动作按照线程划分在不同的空间之中进行，即每个线程在Java堆中预先分配一小块内存，成为本地线程分配缓冲（TLAB），哪个线程要分配内存，就在自己的TLAB上分配，只有TLAB用完并分配新的TLAB时，才需要同步锁定。</li>
+</ul>
+</li>
+<li><p>内存分配完后，虚拟机需要将分配到的内存空间都初始化为零。如果使用TLAB，也可以提前到TLAB分配时进行。这一步操作保证了对象的实例字段在Java代码中可以不赋初值就直接使用，程序能访问到这些字段的数据类型所对应的零值。</p>
+</li>
+<li><p>接下来，虚拟机要对对象进行必要的设置。例如这个对象是哪个类的实例、如何才能找到类的元数据信息、对象的哈希吗、对象的GC分代年龄等信息，这些信息存放在对象头之中。</p>
+</li>
+<li><p>最后根据程序员的意愿进行初始化。</p>
+</li>
+</ul>
+<h3 id="对象的内存分布"><a href="#对象的内存分布" class="headerlink" title="对象的内存分布"></a>对象的内存分布</h3><p>对象在内存中存储的布局可以分为三块区域：对象头、实例数据、对齐填充。</p>
+<ul>
+<li><p>对象头：包括两部分信息，第一部分用于存储对象自身的运行时数据，如哈希码、锁状态标志、偏向线程ID、偏向时间戳等。这部分数据长度在32位和64位的虚拟机中分别为32bit和64bit，称为Mark Word。这部分数据很多，超出了这么多位可以记录的限制，所以被设计成一个非固定的数据结构以便在极小的空间内存储尽量多的信息。</p>
+<p>对象头的另一部分是类型指针，只想它的类元数据（元数据就是数据的数据），虚拟机通过这个指针确定这个对象是哪个类的实例。</p>
+</li>
+<li><p>实例数据：是对象真正存储的有效信息，也是在代码中所定义的各种类型的字段内容。无论是从父类继承的还是子类本中定义的，父类变量出现在子类之前，如果compactFields参数值为true，那么子类中较狭小的变量也可能插入父类之中。</p>
+</li>
+<li><p>对齐填充：不是必然存在，仅仅起着占位符的作用。HotSpot的自动内存管理系统要求对象起始地址必须是8字节的整数倍，因此当对象实例数据部分没有对齐时，需要对齐填充来补全。</p>
+</li>
+</ul>
+<h3 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h3><p>目前主流的访问方式有使用句柄和直接指针两种（句柄就是一个间接访问对象的渠道）。</p>
+<ul>
+<li><p>如果使用句柄的话，Java堆中会划分出一块内存作为句柄池，栈中的reference中储存的就是对象的句柄地址，句柄中包含了对象实例数据和类型数据各自的具体地址信息。如下图：</p>
+<p><img src="/img/jvm1-2.jpeg" alt="jvm1"></p>
+</li>
+<li><p>使用直接指针访问，那么Java堆对象的布局中就必须考虑如何放置访问类型数据的相关信息，而reference中存储的直接就是对象地址。</p>
+<p><img src="/img/jvm1-3.jpeg" alt="jvm1"></p>
+<p>这两种方式的优缺点：使用句柄访问的好处就是reference中存储的是稳定的句柄地址，对象被移动时只会改变句柄中的实例数据指针，reference本身不需要修改。而使用直接指针访问的最大好处就是速度快，节省了一次指针定位的时间开销。</p>
+</li>
+</ul>
+<h2 id="异常产生情况分析"><a href="#异常产生情况分析" class="headerlink" title="异常产生情况分析"></a>异常产生情况分析</h2><h3 id="Java堆溢出"><a href="#Java堆溢出" class="headerlink" title="Java堆溢出"></a>Java堆溢出</h3><p>只要不断地创建对象，并且保证GC roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，那么在对象数量到达最大堆的容量限制后就会产生内存溢出异常。</p>
+<p>要解决这个异常，一般先通过内存映像分析工具对堆转储快照分析，确定内存的对象是否是必要的（即判断是内存泄露还是内存溢出)。</p>
+<p>如果是<strong>内存泄露</strong>，可以进一步通过工具查看泄露对象到GC Roots的引用链，比较准确地定位出泄露代码的位置。</p>
+<p>如果是<strong>内存溢出</strong>，可以调大虚拟机堆参数，或者从代码上检查是否存在某些对象生命周期过长的情况。</p>
+<h3 id="虚拟机栈和本地方法栈溢出"><a href="#虚拟机栈和本地方法栈溢出" class="headerlink" title="虚拟机栈和本地方法栈溢出"></a>虚拟机栈和本地方法栈溢出</h3><p>如果线程请求的栈深度大于虚拟机栈允许的最大深度，将抛出StackOverflowError异常。如果虚拟机在拓展栈时无法申请到足够的内存空间，则抛出OutOfMemoryError异常。</p>
+<p>定义大量的本地变量，增大此方法帧中本地变量表的长度，达到栈允许的最大深度后，就会抛出StackOverflowError。</p>
+<p>单线程情况下，很难抛出OutOfMemoryError异常。因为你在达到栈最大深度时，一般都还没有用完内存空间。</p>
+<p>如果是多线程情况下，不断创建新的线程，新的线程中又不断创建新变量，可能会抛出OutOfMemoryError。</p>
+<h3 id="方法区和运行时常量池溢出"><a href="#方法区和运行时常量池溢出" class="headerlink" title="方法区和运行时常量池溢出"></a>方法区和运行时常量池溢出</h3><p>String.intern()是一个native方法，它的作用是：如果字符串常量池中已经包含一个等于此String对象的字符串，则返回代表池中这个字符串的String对象，否则将此String对象包含的字符串添加到常量池中，并且返回此String对象的引用。</p>
+<p>在JDK1.6及之前的版本中，由于常量池分配在永久代中，如果不断地intern，会抛出OutOfMemoryError异常。使用JDK1.7就不会抛出。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行时数据区域"><span class="toc-number">1.</span> <span class="toc-text">运行时数据区域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#程序计数器"><span class="toc-number">1.1.</span> <span class="toc-text">程序计数器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java虚拟机栈"><span class="toc-number">1.2.</span> <span class="toc-text">Java虚拟机栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地方法栈"><span class="toc-number">1.3.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java堆"><span class="toc-number">1.4.</span> <span class="toc-text">Java堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法区"><span class="toc-number">1.5.</span> <span class="toc-text">方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行时常量池"><span class="toc-number">1.6.</span> <span class="toc-text">运行时常量池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接内存"><span class="toc-number">1.7.</span> <span class="toc-text">直接内存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象的分配、布局、访问"><span class="toc-number">2.</span> <span class="toc-text">对象的分配、布局、访问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的创建"><span class="toc-number">2.1.</span> <span class="toc-text">对象的创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的内存分布"><span class="toc-number">2.2.</span> <span class="toc-text">对象的内存分布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的访问定位"><span class="toc-number">2.3.</span> <span class="toc-text">对象的访问定位</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常产生情况分析"><span class="toc-number">3.</span> <span class="toc-text">异常产生情况分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java堆溢出"><span class="toc-number">3.1.</span> <span class="toc-text">Java堆溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#虚拟机栈和本地方法栈溢出"><span class="toc-number">3.2.</span> <span class="toc-text">虚拟机栈和本地方法栈溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法区和运行时常量池溢出"><span class="toc-number">3.3.</span> <span class="toc-text">方法区和运行时常量池溢出</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/12/JVM（一）内存区域分析/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&text=Java内存区域与内存溢出异常"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&is_video=false&description=Java内存区域与内存溢出异常"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java内存区域与内存溢出异常&body=Check out this article: http://sihan.world/2017/06/12/JVM（一）内存区域分析/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&title=Java内存区域与内存溢出异常"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/12/JVM（一）内存区域分析/&name=Java内存区域与内存溢出异常&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

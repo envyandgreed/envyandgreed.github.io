@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="这一篇主要介绍Node.js的结构和一些内置模块。 事件循环 线程池：数据库、文件访问、网络层访问，异步执行。 完成后加入到事件队列：先进先出，进行事件循环，单线程进行。 综上，JS运行在单线程中进行，底层是多线程的，网络层是可以多路复用的。 内置模块全局对象：不需要require就可以直接使用包括：  module exports require __dirname __filename pro">
+<meta name="keywords" content="Node.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RE：从零开始的Node.js生活(1)">
+<meta property="og:url" content="http://sihan.world/2017/03/28/nodejs(1)/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="这一篇主要介绍Node.js的结构和一些内置模块。 事件循环 线程池：数据库、文件访问、网络层访问，异步执行。 完成后加入到事件队列：先进先出，进行事件循环，单线程进行。 综上，JS运行在单线程中进行，底层是多线程的，网络层是可以多路复用的。 内置模块全局对象：不需要require就可以直接使用包括：  module exports require __dirname __filename pro">
+<meta property="og:locale" content="en-US">
+<meta property="og:image" content="http://sihan.world/img/6-1.png">
+<meta property="og:image" content="http://sihan.world/img/7-1.png">
+<meta property="og:image" content="http://sihan.world/img/7-2.png">
+<meta property="og:image" content="http://sihan.world/img/7-3.png">
+<meta property="og:image" content="http://sihan.world/img/7-4.png">
+<meta property="og:image" content="http://sihan.world/img/7-5.png">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RE：从零开始的Node.js生活(1)">
+<meta name="twitter:description" content="这一篇主要介绍Node.js的结构和一些内置模块。 事件循环 线程池：数据库、文件访问、网络层访问，异步执行。 完成后加入到事件队列：先进先出，进行事件循环，单线程进行。 综上，JS运行在单线程中进行，底层是多线程的，网络层是可以多路复用的。 内置模块全局对象：不需要require就可以直接使用包括：  module exports require __dirname __filename pro">
+<meta name="twitter:image" content="http://sihan.world/img/6-1.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>RE：从零开始的Node.js生活(1)</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/03/28/nodejs(4)/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/03/28/hexo搭建/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/nodejs(1)/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/nodejs(1)/&text=RE：从零开始的Node.js生活(1)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/nodejs(1)/&is_video=false&description=RE：从零开始的Node.js生活(1)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RE：从零开始的Node.js生活(1)&body=Check out this article: http://sihan.world/2017/03/28/nodejs(1)/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/nodejs(1)/&name=RE：从零开始的Node.js生活(1)&description=&lt;p&gt;&lt;img src=&#34;/img/6-1.png&#34; alt=&#34;6-1&#34;&gt;&lt;br&gt;&lt;strong&gt;这一篇主要介绍Node.js的结构和一些内置模块。&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;事件循环&#34;&gt;&lt;a href=&#34;#事件循环&#34; class=&#34;headerlink&#34; title=&#34;事件循环&#34;&gt;&lt;/a&gt;事件循环&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;/img/7-1.png&#34; alt=&#34;7-1&#34;&gt;&lt;br&gt; 线程池：数据库、文件访问、网络层访问，异步执行。&lt;br&gt; 完成后加入到事件队列：先进先出，进行事件循环，单线程进行。&lt;br&gt; 综上，JS运行在单线程中进行，底层是多线程的，网络层是可以多路复用的。&lt;/p&gt;
+&lt;h4 id=&#34;内置模块&#34;&gt;&lt;a href=&#34;#内置模块&#34; class=&#34;headerlink&#34; title=&#34;内置模块&#34;&gt;&lt;/a&gt;内置模块&lt;/h4&gt;&lt;p&gt;全局对象：不需要require就可以直接使用包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;module&lt;/li&gt;
+&lt;li&gt;exports&lt;/li&gt;
+&lt;li&gt;require&lt;/li&gt;
+&lt;li&gt;__dirname&lt;/li&gt;
+&lt;li&gt;__filename&lt;/li&gt;
+&lt;li&gt;process //API&lt;/li&gt;
+&lt;li&gt;Buffer //&lt;/li&gt;
+&lt;li&gt;console&lt;/li&gt;
+&lt;li&gt;timers(setTimeout…)&lt;/li&gt;
+&lt;li&gt;global&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;process部分API&#34;&gt;&lt;a href=&#34;#process部分API&#34; class=&#34;headerlink&#34; title=&#34;process部分API&#34;&gt;&lt;/a&gt;process部分API&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;/img/7-2.png&#34; alt=&#34;7-2&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Event：message代表进程间的通信，进程与父进程之间可以通信，当接收到父进程消息，就会促发message事件。&lt;/li&gt;
+&lt;li&gt;process.send(message[,sendHandle[,options]][,callback])就是向父进程发送了消息。&lt;/li&gt;
+&lt;li&gt;child_process：用于接受或发送子进程数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;process.env argv pid arch platform connected title config：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;env：环境变量&lt;/li&gt;
+&lt;li&gt;argv：接收参数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;process.cwd()当前工作目录&lt;br&gt;process.stdout stdin 标准输入输出流&lt;br&gt;Event:uncaughtException 未捕获异常unhandledRejection&lt;/p&gt;
+&lt;h4 id=&#34;Buffer部分API&#34;&gt;&lt;a href=&#34;#Buffer部分API&#34; class=&#34;headerlink&#34; title=&#34;Buffer部分API&#34;&gt;&lt;/a&gt;Buffer部分API&lt;/h4&gt;&lt;p&gt;用于表示2进制数据,可以进行分配，截取，拼接，读写，字节序处理。&lt;br&gt;buf.toString([encoding[,start[,end]]])&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#事件循环"><span class="toc-number">1.</span> <span class="toc-text">事件循环</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#内置模块"><span class="toc-number">2.</span> <span class="toc-text">内置模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#process部分API"><span class="toc-number">3.</span> <span class="toc-text">process部分API</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer部分API"><span class="toc-number">4.</span> <span class="toc-text">Buffer部分API</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#events-EventEmitter"><span class="toc-number">5.</span> <span class="toc-text">events.EventEmitter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#stream"><span class="toc-number">6.</span> <span class="toc-text">stream</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重点模块"><span class="toc-number">7.</span> <span class="toc-text">重点模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http-Server"><span class="toc-number">8.</span> <span class="toc-text">http.Server</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        RE：从零开始的Node.js生活(1)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-03-28T08:53:40.000Z" itemprop="datePublished">2017-03-28</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Node-js/">Node.js</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><img src="/img/6-1.png" alt="6-1"><br><strong>这一篇主要介绍Node.js的结构和一些内置模块。</strong></p>
+<h4 id="事件循环"><a href="#事件循环" class="headerlink" title="事件循环"></a>事件循环</h4><p><img src="/img/7-1.png" alt="7-1"><br> 线程池：数据库、文件访问、网络层访问，异步执行。<br> 完成后加入到事件队列：先进先出，进行事件循环，单线程进行。<br> 综上，JS运行在单线程中进行，底层是多线程的，网络层是可以多路复用的。</p>
+<h4 id="内置模块"><a href="#内置模块" class="headerlink" title="内置模块"></a>内置模块</h4><p>全局对象：不需要require就可以直接使用包括：</p>
+<ul>
+<li>module</li>
+<li>exports</li>
+<li>require</li>
+<li>__dirname</li>
+<li>__filename</li>
+<li>process //API</li>
+<li>Buffer //</li>
+<li>console</li>
+<li>timers(setTimeout…)</li>
+<li>global</li>
+</ul>
+<h4 id="process部分API"><a href="#process部分API" class="headerlink" title="process部分API"></a>process部分API</h4><p><img src="/img/7-2.png" alt="7-2"></p>
+<ul>
+<li>Event：message代表进程间的通信，进程与父进程之间可以通信，当接收到父进程消息，就会促发message事件。</li>
+<li>process.send(message[,sendHandle[,options]][,callback])就是向父进程发送了消息。</li>
+<li>child_process：用于接受或发送子进程数据。</li>
+</ul>
+<p>process.env argv pid arch platform connected title config：</p>
+<ul>
+<li>env：环境变量</li>
+<li>argv：接收参数</li>
+</ul>
+<p>process.cwd()当前工作目录<br>process.stdout stdin 标准输入输出流<br>Event:uncaughtException 未捕获异常unhandledRejection</p>
+<h4 id="Buffer部分API"><a href="#Buffer部分API" class="headerlink" title="Buffer部分API"></a>Buffer部分API</h4><p>用于表示2进制数据,可以进行分配，截取，拼接，读写，字节序处理。<br>buf.toString([encoding[,start[,end]]])<br><a id="more"></a></p>
+<h4 id="events-EventEmitter"><a href="#events-EventEmitter" class="headerlink" title="events.EventEmitter"></a>events.EventEmitter</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> util = <span class="built_in">require</span>(<span class="string">'util'</span>)</span><br><span class="line"><span class="keyword">const</span> EventEmitter = <span class="built_in">require</span>(<span class="string">'events'</span>)</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyEmitter</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       EventEmitter.call(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">util.inherits(MyEmitter,EventEmitter)</span><br><span class="line">MyEmitter.prototype.doStaff = <span class="function"><span class="keyword">function</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.emit(<span class="string">'staff'</span>,a,b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myEmitter = <span class="keyword">new</span> MyEmitter()</span><br><span class="line">myEmitter.on(<span class="string">'staff'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">       <span class="built_in">console</span>.log(<span class="string">'on staff'</span>,a,b)</span><br><span class="line">&#125;)</span><br><span class="line">myEmitter.once(<span class="string">'staff'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">       <span class="built_in">console</span>.log(<span class="string">'once'</span>,a,b)</span><br><span class="line">&#125;)</span><br><span class="line">myEmitter.doStaff(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">myEmitter.doStaff(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">--------------------------</span><br><span class="line">on staff <span class="number">1</span> <span class="number">2</span></span><br><span class="line">once <span class="number">1</span> <span class="number">2</span></span><br><span class="line">on staff <span class="number">1</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>其中，util.inherits是Node.js中的原型继承函数：util.inherits(constructor, superConstructor)，也就是说constructor只会继承superConstructor在原型中定义的函数方法。<br>call函数中的this指向EventEmitter，表示在MyEmitter中执行EventEmitter的方法，这样即实现了原型的继承，又完成了构造函数内部的属性继承。<br>之后我们在MyEmitter的原型中声明一个新的方法doStaff，用于抛出事件staff，事件中传入参数a，b。其中emit用于发射event事件，传递若干可选参数至事件监听的参数列表。<br>之后使用on来监听事件，once代表只监听事件一次。</p>
+<h4 id="stream"><a href="#stream" class="headerlink" title="stream"></a>stream</h4><p><img src="/img/7-3.png" alt="7-3"><br>流，分为俩种，一种是可读数据流，一种是可写数据流。<br>可读数据流，也称为输入流，有两种数据操作，一种是data，一种是read：</p>
+<ul>
+<li>data：接受一段数据，并作为参数传入</li>
+<li>read([size])：可以手动制定数据大小，但是需要在pause()状态下才能执行。</li>
+<li>readable：用于促发read操作</li>
+</ul>
+<p>输出流：</p>
+<ul>
+<li>write：可以写入一段事件</li>
+<li>pipe：将输入流引用至输出流</li>
+</ul>
+<h4 id="重点模块"><a href="#重点模块" class="headerlink" title="重点模块"></a>重点模块</h4><p><img src="/img/7-4.png" alt="7-4"></p>
+<ul>
+<li>stream.Duplex是一个双功能模块，拥有读取和写入两种功能。</li>
+<li>net.Socket继承了Duplex，所以也是双功能的，并作为http的对象。</li>
+<li>http.ClientRequest：是客户端请求对象，例如客户端发起提交post请求时，post的数据是要通过Write的方法写入的。</li>
+<li>http.SeverResponse：服务端向客户端的返回，同样需要使用Write方法写入。</li>
+<li>http.IncomingMessage：可以表示前两者，既可以表示服务端下发的数据，也可以表示客户端发出的数据，因为表示所有的进入的消息，需要Read方法读出来。</li>
+</ul>
+<h4 id="http-Server"><a href="#http-Server" class="headerlink" title="http.Server"></a>http.Server</h4><p><img src="/img/7-5.png" alt="7-5"><br>首先是TCP的Server：net.Server监听一个端口之后，可以收到客户端的链接，接收到客户端链接之后会产生一个net.Socket对象。<br>如果是一个http.Server,监听一个端口后当有客户端发送请求之后，会产生两个对象，一个是IncomingMessage和ServerResponse对象。用于接受客户端的请求信息和服务端下发的返回。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#事件循环"><span class="toc-number">1.</span> <span class="toc-text">事件循环</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#内置模块"><span class="toc-number">2.</span> <span class="toc-text">内置模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#process部分API"><span class="toc-number">3.</span> <span class="toc-text">process部分API</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer部分API"><span class="toc-number">4.</span> <span class="toc-text">Buffer部分API</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#events-EventEmitter"><span class="toc-number">5.</span> <span class="toc-text">events.EventEmitter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#stream"><span class="toc-number">6.</span> <span class="toc-text">stream</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重点模块"><span class="toc-number">7.</span> <span class="toc-text">重点模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http-Server"><span class="toc-number">8.</span> <span class="toc-text">http.Server</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/nodejs(1)/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/nodejs(1)/&text=RE：从零开始的Node.js生活(1)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/nodejs(1)/&is_video=false&description=RE：从零开始的Node.js生活(1)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RE：从零开始的Node.js生活(1)&body=Check out this article: http://sihan.world/2017/03/28/nodejs(1)/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/nodejs(1)/&title=RE：从零开始的Node.js生活(1)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/nodejs(1)/&name=RE：从零开始的Node.js生活(1)&description=&lt;p&gt;&lt;img src=&#34;/img/6-1.png&#34; alt=&#34;6-1&#34;&gt;&lt;br&gt;&lt;strong&gt;这一篇主要介绍Node.js的结构和一些内置模块。&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;事件循环&#34;&gt;&lt;a href=&#34;#事件循环&#34; class=&#34;headerlink&#34; title=&#34;事件循环&#34;&gt;&lt;/a&gt;事件循环&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;/img/7-1.png&#34; alt=&#34;7-1&#34;&gt;&lt;br&gt; 线程池：数据库、文件访问、网络层访问，异步执行。&lt;br&gt; 完成后加入到事件队列：先进先出，进行事件循环，单线程进行。&lt;br&gt; 综上，JS运行在单线程中进行，底层是多线程的，网络层是可以多路复用的。&lt;/p&gt;
+&lt;h4 id=&#34;内置模块&#34;&gt;&lt;a href=&#34;#内置模块&#34; class=&#34;headerlink&#34; title=&#34;内置模块&#34;&gt;&lt;/a&gt;内置模块&lt;/h4&gt;&lt;p&gt;全局对象：不需要require就可以直接使用包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;module&lt;/li&gt;
+&lt;li&gt;exports&lt;/li&gt;
+&lt;li&gt;require&lt;/li&gt;
+&lt;li&gt;__dirname&lt;/li&gt;
+&lt;li&gt;__filename&lt;/li&gt;
+&lt;li&gt;process //API&lt;/li&gt;
+&lt;li&gt;Buffer //&lt;/li&gt;
+&lt;li&gt;console&lt;/li&gt;
+&lt;li&gt;timers(setTimeout…)&lt;/li&gt;
+&lt;li&gt;global&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;process部分API&#34;&gt;&lt;a href=&#34;#process部分API&#34; class=&#34;headerlink&#34; title=&#34;process部分API&#34;&gt;&lt;/a&gt;process部分API&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;/img/7-2.png&#34; alt=&#34;7-2&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Event：message代表进程间的通信，进程与父进程之间可以通信，当接收到父进程消息，就会促发message事件。&lt;/li&gt;
+&lt;li&gt;process.send(message[,sendHandle[,options]][,callback])就是向父进程发送了消息。&lt;/li&gt;
+&lt;li&gt;child_process：用于接受或发送子进程数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;process.env argv pid arch platform connected title config：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;env：环境变量&lt;/li&gt;
+&lt;li&gt;argv：接收参数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;process.cwd()当前工作目录&lt;br&gt;process.stdout stdin 标准输入输出流&lt;br&gt;Event:uncaughtException 未捕获异常unhandledRejection&lt;/p&gt;
+&lt;h4 id=&#34;Buffer部分API&#34;&gt;&lt;a href=&#34;#Buffer部分API&#34; class=&#34;headerlink&#34; title=&#34;Buffer部分API&#34;&gt;&lt;/a&gt;Buffer部分API&lt;/h4&gt;&lt;p&gt;用于表示2进制数据,可以进行分配，截取，拼接，读写，字节序处理。&lt;br&gt;buf.toString([encoding[,start[,end]]])&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

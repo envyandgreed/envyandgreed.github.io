@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="​    线程安全性。 ​    线程的安全性就是当多个线程访问某个类时，这个类始终都能表现出正确的行为，那么就称这个类是线程安全的。 ​    我们来看一个简单的示例，一个基于servlet的因数分解服务，并组建扩展它的功能。同时确保线程的安全性。 12345678@ThreadSafepublic class StatelessFactorizer implements Servlet&amp;#12">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搞个多线程（二）">
+<meta property="og:url" content="http://sihan.world/2017/06/07/搞个多线程（二）/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="​    线程安全性。 ​    线程的安全性就是当多个线程访问某个类时，这个类始终都能表现出正确的行为，那么就称这个类是线程安全的。 ​    我们来看一个简单的示例，一个基于servlet的因数分解服务，并组建扩展它的功能。同时确保线程的安全性。 12345678@ThreadSafepublic class StatelessFactorizer implements Servlet&amp;#12">
+<meta property="og:locale" content="en-US">
+<meta property="og:updated_time" content="2018-01-09T02:32:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搞个多线程（二）">
+<meta name="twitter:description" content="​    线程安全性。 ​    线程的安全性就是当多个线程访问某个类时，这个类始终都能表现出正确的行为，那么就称这个类是线程安全的。 ​    我们来看一个简单的示例，一个基于servlet的因数分解服务，并组建扩展它的功能。同时确保线程的安全性。 12345678@ThreadSafepublic class StatelessFactorizer implements Servlet&amp;#12">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>搞个多线程（二）</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/06/07/搞个多线程（三）/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/06/06/搞个多线程（一）/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/07/搞个多线程（二）/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/07/搞个多线程（二）/&text=搞个多线程（二）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/07/搞个多线程（二）/&is_video=false&description=搞个多线程（二）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=搞个多线程（二）&body=Check out this article: http://sihan.world/2017/06/07/搞个多线程（二）/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/07/搞个多线程（二）/&name=搞个多线程（二）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        搞个多线程（二）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-06-07T09:45:06.000Z" itemprop="datePublished">2017-06-07</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>​    线程安全性。</p>
+<p>​    线程的安全性就是当多个线程访问某个类时，这个类始终都能表现出正确的行为，那么就称这个类是线程安全的。</p>
+<p>​    我们来看一个简单的示例，一个基于servlet的因数分解服务，并组建扩展它的功能。同时确保线程的安全性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StatelessFactorizer</span> <span class="keyword">implements</span> <span class="title">Servlet</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span> <span class="params">(ServletRequest req,ServletRequest resp)</span></span>&#123;</span><br><span class="line">    BigInteger i = extractFromRequest(req);</span><br><span class="line">    BigInteger[] factors = factor(i);</span><br><span class="line">    encodeIntoResponse(resp,factors);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于StatelessFactorizer是无状态的：不包含任何域，也不包含任何其他类中域的引用，因此在多线程访问的时候，结算结果并不会互相影响，所以是线程安全的。无状态对象一定是线程安全的。</p>
+<p>但是如果我们在添加三行代码，加一个计数器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NotThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StatelessFactorizer</span> <span class="keyword">implements</span> <span class="title">Servlet</span></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">long</span> count = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getCount</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> count;&#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span> <span class="params">(ServletRequest req,ServletRequest resp)</span></span>&#123;</span><br><span class="line">    BigInteger i = extractFromRequest(req);</span><br><span class="line">    BigInteger[] factors = factor(i);</span><br><span class="line">    ++count;</span><br><span class="line">    encodeIntoResponse(resp,factors);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 这样一来，++count就变成了：读取-修改-写入的操作序列，其结果依赖于之前的状态，这就和上一章出现了相同的错误，我们称之为竞态条件。</p>
+<p>所谓竞态条件就是“先检查后执行”，比如你和朋友约定在无限循环路的星巴克喝咖啡，但是无限循环路有两个星巴克你们并没有说好。你在a星巴克等到了约定时间朋友还没有来，于是看了一圈，决定去b星巴克但是到了之后也没有找到。</p>
+<p>当你迈出星巴克门时，你在星巴克a的观察结果将变得无效，你的朋友可能从后门进来，但你并不知道。所以竞态条件的本质就是：基于一种可能失效的观察结果来做出判读或者执行某个计算。例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NotThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyInitrace</span></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> ExpensiveObject instance = <span class="keyword">null</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> ExpensiveObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)</span><br><span class="line">      instance = <span class="keyword">new</span> ExpensiveObject();</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>两个线程同时执行getInstance的话，A线程先执行，B的执行结果就要取决于不可预测的时序。因此可能会出现错误。</p>
+<p>要避免竞态条件，就要在某个线程修改改变量时，通过某种方式防止其他线程使用这个变量。Java中采用加锁机制来确保原子性的内置机制。</p>
+<p>我们先用使用一个现有的线程安全类，来修复安全问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CountingFactorizer</span> <span class="keyword">implements</span> <span class="title">Servlet</span></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> AtomicLong count = <span class="keyword">new</span> AtomicLong(<span class="number">0</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getCount</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> coutn.get();&#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req,ServletResponse resp)</span></span>&#123;</span><br><span class="line">    BigInteger i = extractFromRequest(req);</span><br><span class="line">    BigInteger[] factors = factor(i);</span><br><span class="line">    count.incrementAndGet();</span><br><span class="line">    encodeIntoResponse(resp,factors);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里采用了java.util.concurrent.atomic包中包含的一些原子变量类。通过使用线程安全类AtomicLong来管理计数器的状态，确保了代码的安全性。但是上述代码添加的状态变量由一个变为多个时候，问题就不这么简单了。</p>
+<p>比如我们要增加一个功能，缓存上一次结果，这样下次计算的时候，如果发送的请求相同，可以直接使用上一次计算结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NotThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnsafeCachingFactorizer</span> <span class="keyword">implements</span> <span class="title">Servlet</span></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> AtomicReference&lt;BigInteger&gt; lastNumber = <span class="keyword">new</span> AtomicReference&lt;BigInteger&gt;();</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> AtomicReference&lt;BigInteger[]&gt; lastFactors = <span class="keyword">new</span> AtomicReference&lt;BigInteger[]&gt;();</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req,ServletResponse resp)</span></span>&#123;</span><br><span class="line">    BigInteger i= extractFromRequest(req);</span><br><span class="line">    <span class="keyword">if</span>(i.equals(lastNumber.get()))</span><br><span class="line">      encodeIntoResponse(resp,lastFactors.get());</span><br><span class="line">  	<span class="keyword">else</span>&#123;</span><br><span class="line">      BigInteger[] factors = factor(i);</span><br><span class="line">      lastNumber.set(i);</span><br><span class="line">      lastFactors.set(factors);</span><br><span class="line">      encodeIntoResponse(resp,factors);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然我们对对象采用了线程安全类来管理，但上述代码仍然是线程不安全的，存在着竞态条件。这里的不变性条件是lastFactors中的因数乘积应该等于lastNumber，但是多线程调用的时候无法保证，两个set会同时更新两个变量。甚至无法保证同时获取两个变量，A获取的时候，B可能修改了他们，这样就变得线程不安全了。</p>
+<p>内置锁。Java的内置锁机制：同步代码块。同步代码块分为两个部分：一个作为锁的对象引用，一个作为由这个锁保护的代码块，以关键字synchronized来修饰的方法就是一种横跨整个方法体的同步代码块。Java的内置锁相当于一个互斥体，意味着最多只能有一个线程能持有这种锁。这种同步机制使得要确保Servlet的线程安全性变得简单:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SynchronizedFactorizer</span> <span class="keyword">implements</span> <span class="title">Servlet</span></span>&#123;</span><br><span class="line">  <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>) <span class="keyword">private</span> BigInteger lastNumber;</span><br><span class="line">  <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>) <span class="keyword">private</span> BigInteger[] lastFactors;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req,ServletResponse resp)</span></span>&#123;</span><br><span class="line">    BigInteger i = extractFromRequest(req);</span><br><span class="line">    <span class="keyword">if</span>(i.equals(lastNumber))</span><br><span class="line">      encodeIntoResponse(resp,lastFactors);</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      BigInteger[] factors = factor(i);</span><br><span class="line">      lastNumber = i;</span><br><span class="line">      lastFactors = factors;</span><br><span class="line">      encodeIntoResponse(resp,factors);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，这种写法的代价就是性能非常差，因为多个客户端无法同时使用Servlet。</p>
+<p>我们需要用锁来保护状态，并且对于每个共享的和可变的变量都应该只由一个锁来保护，对于每个包含多个变量的不变形条件，其中涉及的所有变量也需要由同一个锁来保护。除此之外，也不是说在每个方法上添加synchronized方法，就能保证同步了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!vector.contains(element))&#123;</span><br><span class="line">  vector.add(element);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码仍然存在着竞态条件“如果不存在则添加”。</p>
+<p>上面我们提到了简单粗暴的同步方法synchronized，但是此方法违背了Serlvet框架的初衷。因此我们要缩小同步代码块的作用范围，我们要确保同步代码块不要过小，并且不要将本应该是原子操作拆分到多个同步代码块之中。应该尽量将不影响共享状态且执行时间较长的操作从同步代码块中分离出去，从而在这些操作的执行过程中，其他线程可以访问共享状态。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CachedFactorizer</span> <span class="keyword">implements</span> <span class="title">Servlet</span></span>&#123;</span><br><span class="line">  <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>) <span class="keyword">private</span> BigInteger lastNumber;</span><br><span class="line">  <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>) <span class="keyword">private</span> BigInteger[] lastFactors;</span><br><span class="line">  <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>) <span class="keyword">private</span> <span class="keyword">long</span> hits;</span><br><span class="line">  <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>) <span class="keyword">private</span> <span class="keyword">long</span> cacheHits;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">long</span> <span class="title">getHits</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> hits;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">double</span> <span class="title">getCacheHitratio</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">double</span>) cacheHits/(<span class="keyword">double</span>) hits;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req,ServletResponse resp)</span></span>&#123;</span><br><span class="line">    BigInteger i = extractFromRequest(req);</span><br><span class="line">    BigInteger[] factors = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">synchronized</span>(<span class="keyword">this</span>)&#123;</span><br><span class="line">      ++hits;</span><br><span class="line">      <span class="keyword">if</span>(i.equals(lastNumber))&#123;</span><br><span class="line">        ++cacheHits;</span><br><span class="line">        factors = lastFactors.clone();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(factors == <span class="keyword">null</span>)&#123;</span><br><span class="line">      factors = factors(i);</span><br><span class="line">      <span class="keyword">synchronized</span>(<span class="keyword">this</span>)&#123;</span><br><span class="line">        lastNumber = i;</span><br><span class="line">        lastFactories = factors.clone();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    encodeIntoResponse(resp,clone());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码，将之前的两个set部分以及计数器部分写入到了同步代码块之中，并且新添加了一个克隆数组的操作。获取与释放锁都需要一定的开销，所以不要将同步代码块分解的过细。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/07/搞个多线程（二）/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/07/搞个多线程（二）/&text=搞个多线程（二）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/07/搞个多线程（二）/&is_video=false&description=搞个多线程（二）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=搞个多线程（二）&body=Check out this article: http://sihan.world/2017/06/07/搞个多线程（二）/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/07/搞个多线程（二）/&title=搞个多线程（二）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/07/搞个多线程（二）/&name=搞个多线程（二）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

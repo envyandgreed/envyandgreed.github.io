@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="有向图稀疏图-邻接表 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051public class SparseGraph &amp;#123;    private int n;      //points    private int m;      //edge">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图相关问题">
+<meta property="og:url" content="http://sihan.world/2017/07/04/图相关问题/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="有向图稀疏图-邻接表 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051public class SparseGraph &amp;#123;    private int n;      //points    private int m;      //edge">
+<meta property="og:locale" content="en-US">
+<meta property="og:updated_time" content="2018-01-09T02:32:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图相关问题">
+<meta name="twitter:description" content="有向图稀疏图-邻接表 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051public class SparseGraph &amp;#123;    private int n;      //points    private int m;      //edge">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>图相关问题</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/08/14/Mybatis逆向工程作死之旅/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/07/03/二分搜索树/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/07/04/图相关问题/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/07/04/图相关问题/&text=图相关问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/07/04/图相关问题/&is_video=false&description=图相关问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=图相关问题&body=Check out this article: http://sihan.world/2017/07/04/图相关问题/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/07/04/图相关问题/&name=图相关问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#有向图"><span class="toc-number">1.</span> <span class="toc-text">有向图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深度优先遍历"><span class="toc-number">2.</span> <span class="toc-text">深度优先遍历</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#广度优先遍历"><span class="toc-number">3.</span> <span class="toc-text">广度优先遍历</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        图相关问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-07-04T00:06:40.000Z" itemprop="datePublished">2017-07-04</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="有向图"><a href="#有向图" class="headerlink" title="有向图"></a>有向图</h2><p>稀疏图-邻接表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SparseGraph</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> n;      <span class="comment">//points</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> m;      <span class="comment">//edge</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> directed;</span><br><span class="line">    <span class="keyword">private</span> Vector&lt;Integer&gt;[] g;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SparseGraph</span><span class="params">(<span class="keyword">int</span> n ,<span class="keyword">boolean</span> directed)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.n = n;</span><br><span class="line">        <span class="keyword">this</span>.m = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">this</span>.directed = directed;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        g = (Vector&lt;Integer&gt;[]) <span class="keyword">new</span> Vector[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            g[i] = <span class="keyword">new</span> Vector&lt;Integer&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">V</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> n;&#125; <span class="comment">// 返回节点个数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">E</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> m;&#125; <span class="comment">// 返回边的个数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEdge</span><span class="params">(<span class="keyword">int</span> v,<span class="keyword">int</span> w)</span></span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> v &gt;= <span class="number">0</span> &amp;&amp; v &lt; n;</span><br><span class="line">        <span class="keyword">assert</span> w &gt;= <span class="number">0</span> &amp;&amp; w &lt; n;</span><br><span class="line"></span><br><span class="line">        g[v].add(w);</span><br><span class="line">        <span class="keyword">while</span>(v!=w &amp;&amp; !directed)&#123;</span><br><span class="line">            g[w].add(v);</span><br><span class="line">        &#125;</span><br><span class="line">        m++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v,<span class="keyword">int</span> w)</span></span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> v &gt;= <span class="number">0</span> &amp;&amp; v &lt; n;</span><br><span class="line">        <span class="keyword">assert</span> w &gt;= <span class="number">0</span> &amp;&amp; w &lt; n;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; g[v].size(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (g[v].elementAt(i) == w)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//相邻节点迭代器</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title">adj</span><span class="params">(<span class="keyword">int</span> v)</span></span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> v&gt;=<span class="number">0</span> &amp;&amp; v &lt; n;</span><br><span class="line">        <span class="keyword">return</span> g[v];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>稠密图 - 邻接矩阵</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DenseGraph</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> n;      <span class="comment">//points</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> m;      <span class="comment">//edge</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> directed;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> g[][];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DenseGraph</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">boolean</span> directed)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.n = n;</span><br><span class="line">        <span class="keyword">this</span>.m = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">this</span>.directed = directed;</span><br><span class="line"></span><br><span class="line">        g = <span class="keyword">new</span> <span class="keyword">boolean</span>[n][n];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">V</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> n;&#125; <span class="comment">// 返回节点个数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">E</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> m;&#125; <span class="comment">// 返回边的个数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEdge</span><span class="params">( <span class="keyword">int</span> v , <span class="keyword">int</span> w )</span></span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> v &gt;= <span class="number">0</span> &amp;&amp; v &lt; n ;</span><br><span class="line">        <span class="keyword">assert</span> w &gt;= <span class="number">0</span> &amp;&amp; w &lt; n ;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v,w))</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        g[v][w] = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">while</span>(!directed)</span><br><span class="line">            g[v][w] = <span class="keyword">false</span>;</span><br><span class="line">        m++;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">( <span class="keyword">int</span> v , <span class="keyword">int</span> w )</span></span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> v &gt;= <span class="number">0</span> &amp;&amp; v &lt; n ;</span><br><span class="line">        <span class="keyword">assert</span> w &gt;= <span class="number">0</span> &amp;&amp; w &lt; n ;</span><br><span class="line">        <span class="keyword">return</span> g[v][w];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//相邻节点迭代器</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title">adj</span><span class="params">(<span class="keyword">int</span> v)</span></span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> v &gt;= <span class="number">0</span> &amp;&amp; v &lt; n;</span><br><span class="line">        Vector&lt;Integer&gt; vector = <span class="keyword">new</span> Vector&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (g[v][i])</span><br><span class="line">                vector.add(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> vector;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="深度优先遍历"><a href="#深度优先遍历" class="headerlink" title="深度优先遍历"></a>深度优先遍历</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Graph</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">V</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">E</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEdge</span><span class="params">( <span class="keyword">int</span> v , <span class="keyword">int</span> w )</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">( <span class="keyword">int</span> v , <span class="keyword">int</span> w )</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title">adj</span><span class="params">(<span class="keyword">int</span> v)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Components</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    Graph G;                    <span class="comment">// 图的引用</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span>[] visited;  <span class="comment">// 记录dfs的过程中节点是否被访问</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> ccount;         <span class="comment">// 记录联通分量个数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] id;           <span class="comment">// 每个节点所对应的联通分量标记</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 图的深度优先遍历</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">( <span class="keyword">int</span> v )</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        visited[v] = <span class="keyword">true</span>;</span><br><span class="line">        id[v] = ccount;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> i: G.adj(v) )&#123;</span><br><span class="line">            <span class="keyword">if</span>( !visited[i] )</span><br><span class="line">                dfs(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造函数, 求出无权图的联通分量</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Components</span><span class="params">(Graph graph)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 算法初始化</span></span><br><span class="line">        G = graph;</span><br><span class="line">        visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[G.V()];</span><br><span class="line">        id = <span class="keyword">new</span> <span class="keyword">int</span>[G.V()];</span><br><span class="line">        ccount = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; G.V() ; i ++ )&#123;</span><br><span class="line">            visited[i] = <span class="keyword">false</span>;</span><br><span class="line">            id[i] = -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 求图的联通分量</span></span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; G.V() ; i ++ )</span><br><span class="line">            <span class="keyword">if</span>( !visited[i] )&#123;</span><br><span class="line">                dfs(i);</span><br><span class="line">                ccount ++;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回图的联通分量个数</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">count</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ccount;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询点v和点w是否联通</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isConnected</span><span class="params">( <span class="keyword">int</span> v , <span class="keyword">int</span> w )</span></span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> v &gt;= <span class="number">0</span> &amp;&amp; v &lt; G.V();</span><br><span class="line">        <span class="keyword">assert</span> w &gt;= <span class="number">0</span> &amp;&amp; w &lt; G.V();</span><br><span class="line">        <span class="keyword">return</span> id[v] == id[w];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="广度优先遍历"><a href="#广度优先遍历" class="headerlink" title="广度优先遍历"></a>广度优先遍历</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ShortestPath</span><span class="params">(Graph graph, <span class="keyword">int</span> s)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 算法初始化</span></span><br><span class="line">        G = graph;</span><br><span class="line">        <span class="keyword">assert</span> s &gt;= <span class="number">0</span> &amp;&amp; s &lt; G.V();</span><br><span class="line"></span><br><span class="line">        visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[G.V()];</span><br><span class="line">        from = <span class="keyword">new</span> <span class="keyword">int</span>[G.V()];</span><br><span class="line">        ord = <span class="keyword">new</span> <span class="keyword">int</span>[G.V()];</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; G.V() ; i ++ )&#123;</span><br><span class="line">            visited[i] = <span class="keyword">false</span>;</span><br><span class="line">            from[i] = -<span class="number">1</span>;</span><br><span class="line">            ord[i] = -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.s = s;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 无向图最短路径算法, 从s开始广度优先遍历整张图</span></span><br><span class="line">        LinkedList&lt;Integer&gt; q = <span class="keyword">new</span> LinkedList&lt;Integer&gt;();</span><br><span class="line"></span><br><span class="line">        q.push( s );</span><br><span class="line">        visited[s] = <span class="keyword">true</span>;</span><br><span class="line">        ord[s] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>( !q.isEmpty() )&#123;</span><br><span class="line">            <span class="keyword">int</span> v = q.pop();</span><br><span class="line">            <span class="keyword">for</span>( <span class="keyword">int</span> i : G.adj(v) )</span><br><span class="line">                <span class="keyword">if</span>( !visited[i] )&#123;</span><br><span class="line">                    q.push(i);</span><br><span class="line">                    visited[i] = <span class="keyword">true</span>;</span><br><span class="line">                    from[i] = v;</span><br><span class="line">                    ord[i] = ord[v] + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#有向图"><span class="toc-number">1.</span> <span class="toc-text">有向图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深度优先遍历"><span class="toc-number">2.</span> <span class="toc-text">深度优先遍历</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#广度优先遍历"><span class="toc-number">3.</span> <span class="toc-text">广度优先遍历</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/07/04/图相关问题/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/07/04/图相关问题/&text=图相关问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/07/04/图相关问题/&is_video=false&description=图相关问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=图相关问题&body=Check out this article: http://sihan.world/2017/07/04/图相关问题/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/07/04/图相关问题/&title=图相关问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/07/04/图相关问题/&name=图相关问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

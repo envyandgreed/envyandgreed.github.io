@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="P.S.话说RE真的好虐啊TATthis的指向问题，是困扰JSer新手的一个经典问题，之所以难以理解，是因为this容易伴随着闭包，立即执行函数、原型链，作用域链等概念一同出现，而这些概念都是JS中的比较容易混淆的知识点，这篇文章将对一些基本的形式和混合形式做出分析。 javascript中this的取值可以分为四种，取决函数的调用模式： 函数调用这是最常见的模式，即：12345function">
+<meta name="keywords" content="Javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解Javascript(零)：this的取值">
+<meta property="og:url" content="http://sihan.world/2017/03/28/理解js(0)this的取值/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="P.S.话说RE真的好虐啊TATthis的指向问题，是困扰JSer新手的一个经典问题，之所以难以理解，是因为this容易伴随着闭包，立即执行函数、原型链，作用域链等概念一同出现，而这些概念都是JS中的比较容易混淆的知识点，这篇文章将对一些基本的形式和混合形式做出分析。 javascript中this的取值可以分为四种，取决函数的调用模式： 函数调用这是最常见的模式，即：12345function">
+<meta property="og:locale" content="en-US">
+<meta property="og:image" content="http://sihan.world/img/5-1.png">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解Javascript(零)：this的取值">
+<meta name="twitter:description" content="P.S.话说RE真的好虐啊TATthis的指向问题，是困扰JSer新手的一个经典问题，之所以难以理解，是因为this容易伴随着闭包，立即执行函数、原型链，作用域链等概念一同出现，而这些概念都是JS中的比较容易混淆的知识点，这篇文章将对一些基本的形式和混合形式做出分析。 javascript中this的取值可以分为四种，取决函数的调用模式： 函数调用这是最常见的模式，即：12345function">
+<meta name="twitter:image" content="http://sihan.world/img/5-1.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>理解Javascript(零)：this的取值</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/03/28/android(1)/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/03/28/nodejs(5)/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/理解js(0)this的取值/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&text=理解Javascript(零)：this的取值"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&is_video=false&description=理解Javascript(零)：this的取值"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=理解Javascript(零)：this的取值&body=Check out this article: http://sihan.world/2017/03/28/理解js(0)this的取值/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&name=理解Javascript(零)：this的取值&description=&lt;p&gt;&lt;img src=&#34;/img/5-1.png&#34; alt=&#34;5-1&#34;&gt;&lt;br&gt;&lt;strong&gt;&lt;em&gt;P.S.话说RE真的好虐啊TAT&lt;/em&gt;&lt;/strong&gt;&lt;br&gt;this的指向问题，是困扰JSer新手的一个经典问题，之所以难以理解，是因为this容易伴随着闭包，立即执行函数、原型链，作用域链等概念一同出现，而这些概念都是JS中的比较容易混淆的知识点，这篇文章将对一些基本的形式和混合形式做出分析。&lt;/p&gt;
+&lt;p&gt;javascript中this的取值可以分为四种，取决函数的调用模式：&lt;/p&gt;
+&lt;h3 id=&#34;函数调用&#34;&gt;&lt;a href=&#34;#函数调用&#34; class=&#34;headerlink&#34; title=&#34;函数调用&#34;&gt;&lt;/a&gt;函数调用&lt;/h3&gt;&lt;p&gt;这是最常见的模式，即：&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;test&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.x = &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	alert(&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.x);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;test(); &lt;span class=&#34;comment&#34;&gt;//1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这里的this指向的是全局对象，我们可以用下面例子来体现：&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; x = &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;test&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; x = &lt;span class=&#34;number&#34;&gt;2&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	alert(&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.x)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;test(); &lt;span class=&#34;comment&#34;&gt;//1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; x = &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;test&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.x = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;test();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;alert(x); &lt;span class=&#34;comment&#34;&gt;//0,这里变成0是因为this指向全局对象，所以将第一行的var x = 1覆盖了。&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;方法调用&#34;&gt;&lt;a href=&#34;#方法调用&#34; class=&#34;headerlink&#34; title=&#34;方法调用&#34;&gt;&lt;/a&gt;方法调用&lt;/h3&gt;&lt;p&gt;当一个函数保存为对象的一个属性时，我们称它为一个方法。在这种情况下，this访问自己所属的对象。&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; myObject = &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	value: &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	showValue: &lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;		alert(&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.value);		&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;   &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;myObject.showValue();&lt;span class=&#34;comment&#34;&gt;//0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数调用"><span class="toc-number">1.</span> <span class="toc-text">函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法调用"><span class="toc-number">2.</span> <span class="toc-text">方法调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数调用"><span class="toc-number">3.</span> <span class="toc-text">构造函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#apply调用模式"><span class="toc-number">4.</span> <span class="toc-text">apply调用模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-立即执行函数-IIFE"><span class="toc-number">5.</span> <span class="toc-text">this X 立即执行函数(IIFE)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-作用域链"><span class="toc-number">6.</span> <span class="toc-text">this X 作用域链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-闭包"><span class="toc-number">7.</span> <span class="toc-text">this X 闭包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-原型链"><span class="toc-number">8.</span> <span class="toc-text">this X 原型链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-new"><span class="toc-number">9.</span> <span class="toc-text">this X new</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        理解Javascript(零)：this的取值
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-03-28T08:53:40.000Z" itemprop="datePublished">2017-03-28</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Javascript/">Javascript</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><img src="/img/5-1.png" alt="5-1"><br><strong><em>P.S.话说RE真的好虐啊TAT</em></strong><br>this的指向问题，是困扰JSer新手的一个经典问题，之所以难以理解，是因为this容易伴随着闭包，立即执行函数、原型链，作用域链等概念一同出现，而这些概念都是JS中的比较容易混淆的知识点，这篇文章将对一些基本的形式和混合形式做出分析。</p>
+<p>javascript中this的取值可以分为四种，取决函数的调用模式：</p>
+<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><p>这是最常见的模式，即：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.x = <span class="number">1</span>;</span><br><span class="line">	alert(<span class="keyword">this</span>.x);</span><br><span class="line">&#125;</span><br><span class="line">test(); <span class="comment">//1</span></span><br></pre></td></tr></table></figure></p>
+<p>这里的this指向的是全局对象，我们可以用下面例子来体现：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line">	alert(<span class="keyword">this</span>.x)</span><br><span class="line">&#125;</span><br><span class="line">test(); <span class="comment">//1</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.x = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">test();</span><br><span class="line">alert(x); <span class="comment">//0,这里变成0是因为this指向全局对象，所以将第一行的var x = 1覆盖了。</span></span><br></pre></td></tr></table></figure>
+<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><p>当一个函数保存为对象的一个属性时，我们称它为一个方法。在这种情况下，this访问自己所属的对象。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;</span><br><span class="line">	value: <span class="number">0</span>,</span><br><span class="line">	showValue: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		alert(<span class="keyword">this</span>.value);		</span><br><span class="line">   &#125;</span><br><span class="line">&#125;;</span><br><span class="line">myObject.showValue();<span class="comment">//0</span></span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<h3 id="构造函数调用"><a href="#构造函数调用" class="headerlink" title="构造函数调用"></a>构造函数调用</h3><p>所谓构造函数，就是通过这个函数生成一个新对象，这时，this指向新对象。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.x = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> o = <span class="keyword">new</span> test();</span><br><span class="line">alert(o.x); <span class="comment">//1</span></span><br></pre></td></tr></table></figure></p>
+<p>为了体现这里的this不是指向全局：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.x = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> o = test();</span><br><span class="line">alert(x); <span class="comment">//2,可见全局声明的x并没有被对象中的声明所覆盖。</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="apply调用模式"><a href="#apply调用模式" class="headerlink" title="apply调用模式"></a>apply调用模式</h3><p>apply和call是函数对象的方法，都可用于改变函数的调用对象。apply接收两个参数，第一个参数是要给this绑定的值，第二个是一个参数数组。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="keyword">this</span>.x);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> o = &#123;&#125;;</span><br><span class="line">o.x = <span class="number">1</span>;</span><br><span class="line">o.m = test;</span><br><span class="line">o.m.apply(); <span class="comment">//0,apply的参数为空的时候默认调用全局对象，所以为0。</span></span><br><span class="line">o.m.apply(o); <span class="comment">//1</span></span><br></pre></td></tr></table></figure></p>
+<p>以上四种常见类型比较容易判断this的指向，但是当this与闭包、立即执行函数、原型链、作用域链等概念同时出现时，this的指向就变的难以判断了。在分析混合出现情况之前，我们先澄清几个知识点。<br>1.全局环境中变量的声明<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>. a = <span class="number">10</span>;</span><br><span class="line">alert(a); <span class="comment">//10</span></span><br><span class="line">b = <span class="number">20</span>;</span><br><span class="line">alert(<span class="keyword">this</span>.b); <span class="comment">//20</span></span><br><span class="line"><span class="keyword">var</span> c = <span class="number">30</span>;</span><br><span class="line">alert(<span class="keyword">this</span>.c); <span class="comment">//30</span></span><br></pre></td></tr></table></figure></p>
+<p>上述例子中的b没有通过var声明，所以它实际上不是一个变量，而是global（window）的一个property。变量和属性的显著区别就是，变量不可以被delete而属性可以。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a =<span class="number">5</span>;</span><br><span class="line">b = <span class="number">4</span>;  <span class="comment">// equal to window.b = 4</span></span><br><span class="line">alert(<span class="keyword">delete</span> a); <span class="comment">// false</span></span><br><span class="line">alert(<span class="keyword">delete</span> b); <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>2.this的取值，由函数的调用方式决定而不是函数的定义</p>
+<p>一个错误的观点是，如果函数被定义成全局函数，this指向global，如果被定义成对象的方法，则指向对象。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = &#123;</span><br><span class="line">	bar: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>);		</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">foo.bar(); <span class="comment">//foo</span></span><br><span class="line"><span class="keyword">var</span> baz = foo.bar;</span><br><span class="line"><span class="built_in">console</span>.log(baz === foo.bar); <span class="comment">//true</span></span><br><span class="line">baz(); <span class="comment">//global</span></span><br></pre></td></tr></table></figure></p>
+<p>上述例子中，baz与foo.bar的定义是等价的，但是最终的this指向却不同，所以this的取值不是由函数定义决定的，而是由调用者。<br>这里用一个比较绕的例子作为进阶<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = &#123;</span><br><span class="line">			bar : &#123;</span><br><span class="line">					baz : <span class="function"><span class="keyword">function</span>(<span class="params">qux</span>)</span>&#123;</span><br><span class="line">						<span class="built_in">console</span>.log(<span class="keyword">this</span> === qux);</span><br><span class="line">												&#125;</span><br><span class="line">												 &#125;</span><br><span class="line">												  &#125;</span><br><span class="line">foobar = foo.bar;</span><br><span class="line">foobar.baz(foo.bar) <span class="comment">//true</span></span><br><span class="line">foobar2 = foo.bar.baz;</span><br><span class="line">foobar2(foo.bar) <span class="comment">//false</span></span><br><span class="line">foobar2(foo.bar.baz) <span class="comment">//false</span></span><br></pre></td></tr></table></figure></p>
+<p>这里的foobar.baz(foo.bar)输出true是因为，foobar.baz执行了function，函数里面的this指向function的调用者baz，所以与foo.bar是相等的。但是foobar2被赋值为一个函数，相当于函数调用，this指向global，不等于后两者。</p>
+<h3 id="this-X-立即执行函数-IIFE"><a href="#this-X-立即执行函数-IIFE" class="headerlink" title="this X 立即执行函数(IIFE)"></a>this X 立即执行函数(IIFE)</h3><p>当立即执行函数与this同时出现时，会出现什么养的情况呢？<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.a);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> o = &#123;<span class="attr">a</span>:<span class="number">3</span>,<span class="attr">fun</span>:fun&#125;;</span><br><span class="line"><span class="keyword">var</span> p = &#123;<span class="attr">a</span>:<span class="number">4</span>&#125;;</span><br><span class="line">o.fun(); <span class="comment">//o 3</span></span><br><span class="line">(p.fun = o.fun)();<span class="comment">//window  2</span></span><br><span class="line">(p.fun)()<span class="comment">//p  4</span></span><br></pre></td></tr></table></figure></p>
+<p>上述例子中，o.fun()很好理解，因为是对象o调用的fun函数，所以指向o以及o里的a。但是为什么(p.fun = o.fun)();返回window和2呢？因为这里p.fun = o.fun返回值是函数本身，即function fun(){console.log(this);console.log(this.a);}，所以加上括号之后这个结果被立即执行了，这时候的调用者是window所以会出现如上的结果。至于最后的结果p和4是因为，上一条语句已经给p.fun赋值了函数，所以这时候其实等价于p.fun()，原理同第一条。</p>
+<h3 id="this-X-作用域链"><a href="#this-X-作用域链" class="headerlink" title="this X 作用域链"></a>this X 作用域链</h3><p>javascript中只存在函数作用域，而不存在块级作用域。举个例子：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> scope=<span class="string">"global"</span>;  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">t</span>(<span class="params"></span>)</span>&#123;  </span><br><span class="line">    <span class="built_in">console</span>.log(scope);  </span><br><span class="line">    <span class="keyword">var</span> scope=<span class="string">"local"</span>  </span><br><span class="line">    <span class="built_in">console</span>.log(scope);  </span><br><span class="line">&#125;  </span><br><span class="line">t();</span><br></pre></td></tr></table></figure></p>
+<p>上述例子由于变量声明提升，所以最后的输出结果为undefined,local。<br>一种常见的错误理解，会以为第一句输出global，因为代码还没有执行到var scope = local，这种理解就是块级作用域。而函数作用域则是，变量在声明他们的函数体以及这个函数体嵌套的任意函数体内都是有定义的。<br>我们再看一个例子：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params">arg</span>) </span>&#123;  </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.arg);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line">fn(<span class="number">123</span>);  </span><br><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">fn</span>: fn &#125;;  </span><br><span class="line">o.fn(<span class="number">123</span>);</span><br></pre></td></tr></table></figure></p>
+<p>它的输出结果为：undefined   window   以及 undefined     o<br>同理这里fn(123)开始寻找this.arg，由于是函数调用，所以this即是window，但是在global中并没有生命arg，所以返回undefined，而第二个直接返回window。<br>而对于o.fn(123)，这时候作为对象的一种方法，里面的this代表着o这个对象，然而o内并没有定义arg的值，所以返回undefined。</p>
+<h3 id="this-X-闭包"><a href="#this-X-闭包" class="headerlink" title="this X 闭包"></a>this X 闭包</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xuuu = <span class="number">123</span>;</span><br><span class="line">   <span class="function"><span class="keyword">function</span>  <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">       <span class="keyword">var</span> xuuu = <span class="number">456</span>;</span><br><span class="line">       <span class="keyword">this</span>.aa = <span class="number">6666</span>;     </span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(xuuu);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.aa);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.xuuu);   </span><br><span class="line"> &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> sdf=<span class="keyword">new</span> test();</span><br><span class="line">sdf();</span><br><span class="line">test()();</span><br></pre></td></tr></table></figure>
+<p>sdf（）执行结果：456，undefined, 123<br>test()()执行结果 456,6666,123<br>第一种情况的中this.aa指向sdf，return中this指向全局对象window；第二种情况中两次this都指向window;</p>
+<h3 id="this-X-原型链"><a href="#this-X-原型链" class="headerlink" title="this X 原型链"></a>this X 原型链</h3><p>再来看看原型链的应用：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;  </span><br><span class="line"><span class="keyword">var</span> b = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;  </span><br><span class="line"><span class="keyword">var</span> c = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;  </span><br><span class="line">b.prototype = <span class="keyword">new</span> a();  </span><br><span class="line">c.prototype = <span class="keyword">new</span> b();  </span><br><span class="line">a.prototype.foo = <span class="number">1</span>;  </span><br><span class="line">b.prototype.bar = <span class="number">2</span>;  </span><br><span class="line">c.prototype.foo = <span class="number">3</span>;  </span><br><span class="line"><span class="keyword">var</span> o = <span class="keyword">new</span> c();  </span><br><span class="line"><span class="built_in">console</span>.log(o.foo + <span class="string">','</span> + o.bar);</span><br></pre></td></tr></table></figure></p>
+<p>这里先查找c.prototype，是否显示的定义了foo和bar，发现定义了foo，值为3，之后发现c.prototype为new b()得到的对象，那么查找b.prototype中是否定义了bar，发现定义了，值为2，所以输出3，2.<br>我们再看另一个例子：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.myName = <span class="string">"Foo function."</span>;</span><br><span class="line">&#125;</span><br><span class="line">foo.prototype.sayHello = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="keyword">this</span>.myName);</span><br><span class="line">&#125;</span><br><span class="line">foo.prototype.bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	setTimeout(<span class="keyword">this</span>.sayHello, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">new</span> foo;</span><br><span class="line">f.bar()</span><br></pre></td></tr></table></figure></p>
+<p>这个函数返回的是undefined。其中bar中的this返回原型，而返回后调用的alert是函数调用，this指向的是window，但foo这一函数并没有执行，所以myName仅仅声明但并未赋值，所以出现undefined，这里可以在倒数第二行加上foo();来得到正确的myName</p>
+<h3 id="this-X-new"><a href="#this-X-new" class="headerlink" title="this X new"></a>this X new</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="number">10</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		a=<span class="number">5</span>;</span><br><span class="line">		alert(a);</span><br><span class="line">		alert(<span class="keyword">this</span>.a);</span><br><span class="line">		<span class="keyword">var</span> a;</span><br><span class="line">		alert(<span class="keyword">this</span>.a);</span><br><span class="line">		alert(a);</span><br><span class="line">&#125;</span><br><span class="line">test();</span><br><span class="line"><span class="keyword">new</span> test();</span><br></pre></td></tr></table></figure>
+<p>两种情况返回<br>test(): 5,10，10，5<br>new test():5,undefined,undefined,5<br>第一个很好理解，由于变量声明的提升，a=5变成了局部变量，this.a指向全局变量。<br>第二个new test()，new之后this绑定到新生成的对象上，在对象里调用this，也就是在对象的方法里调用this，此时this指向的是包含方法的对象，也就是test{}，而这里我们并没有声明test对象中的a属性，所以返回值是undefined。</p>
+<p>匆忙写了这么多，主要是为了体现this在多种环境下可能出现的情况，例子过多可能显得有些混乱了，在我深入学习之后会呈现更加清晰条理的总结。如有错误请多多指教。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数调用"><span class="toc-number">1.</span> <span class="toc-text">函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法调用"><span class="toc-number">2.</span> <span class="toc-text">方法调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数调用"><span class="toc-number">3.</span> <span class="toc-text">构造函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#apply调用模式"><span class="toc-number">4.</span> <span class="toc-text">apply调用模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-立即执行函数-IIFE"><span class="toc-number">5.</span> <span class="toc-text">this X 立即执行函数(IIFE)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-作用域链"><span class="toc-number">6.</span> <span class="toc-text">this X 作用域链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-闭包"><span class="toc-number">7.</span> <span class="toc-text">this X 闭包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-原型链"><span class="toc-number">8.</span> <span class="toc-text">this X 原型链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-X-new"><span class="toc-number">9.</span> <span class="toc-text">this X new</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/理解js(0)this的取值/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&text=理解Javascript(零)：this的取值"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&is_video=false&description=理解Javascript(零)：this的取值"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=理解Javascript(零)：this的取值&body=Check out this article: http://sihan.world/2017/03/28/理解js(0)this的取值/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&title=理解Javascript(零)：this的取值"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/理解js(0)this的取值/&name=理解Javascript(零)：this的取值&description=&lt;p&gt;&lt;img src=&#34;/img/5-1.png&#34; alt=&#34;5-1&#34;&gt;&lt;br&gt;&lt;strong&gt;&lt;em&gt;P.S.话说RE真的好虐啊TAT&lt;/em&gt;&lt;/strong&gt;&lt;br&gt;this的指向问题，是困扰JSer新手的一个经典问题，之所以难以理解，是因为this容易伴随着闭包，立即执行函数、原型链，作用域链等概念一同出现，而这些概念都是JS中的比较容易混淆的知识点，这篇文章将对一些基本的形式和混合形式做出分析。&lt;/p&gt;
+&lt;p&gt;javascript中this的取值可以分为四种，取决函数的调用模式：&lt;/p&gt;
+&lt;h3 id=&#34;函数调用&#34;&gt;&lt;a href=&#34;#函数调用&#34; class=&#34;headerlink&#34; title=&#34;函数调用&#34;&gt;&lt;/a&gt;函数调用&lt;/h3&gt;&lt;p&gt;这是最常见的模式，即：&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;test&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.x = &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	alert(&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.x);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;test(); &lt;span class=&#34;comment&#34;&gt;//1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这里的this指向的是全局对象，我们可以用下面例子来体现：&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; x = &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;test&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; x = &lt;span class=&#34;number&#34;&gt;2&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	alert(&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.x)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;test(); &lt;span class=&#34;comment&#34;&gt;//1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; x = &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;test&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.x = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;test();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;alert(x); &lt;span class=&#34;comment&#34;&gt;//0,这里变成0是因为this指向全局对象，所以将第一行的var x = 1覆盖了。&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;方法调用&#34;&gt;&lt;a href=&#34;#方法调用&#34; class=&#34;headerlink&#34; title=&#34;方法调用&#34;&gt;&lt;/a&gt;方法调用&lt;/h3&gt;&lt;p&gt;当一个函数保存为对象的一个属性时，我们称它为一个方法。在这种情况下，this访问自己所属的对象。&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; myObject = &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	value: &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	showValue: &lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;		alert(&lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.value);		&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;   &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;myObject.showValue();&lt;span class=&#34;comment&#34;&gt;//0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

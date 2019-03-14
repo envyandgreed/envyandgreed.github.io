@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="什么是存储过程我们最原始操作数据库的流程是输入SQL命令，mysql引擎语法分析，之后编译执行。存储过程将语法分析和编译只执行一次，以后直接可以调用。它是SQL语句和控制语句的预编译集合。 优点：  可以写控制语句，这样就可以完成复杂的运算，增强了SQL语句的功能性。 存储过程是预编译的，然后将结果储存到内存中，所以第二次开始执行速度变快。 减少了网络流量，因为需要修改数据的话，只需要调用它的名字">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一分钟的数据库知识">
+<meta property="og:url" content="http://sihan.world/2017/08/28/数据库相关/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="什么是存储过程我们最原始操作数据库的流程是输入SQL命令，mysql引擎语法分析，之后编译执行。存储过程将语法分析和编译只执行一次，以后直接可以调用。它是SQL语句和控制语句的预编译集合。 优点：  可以写控制语句，这样就可以完成复杂的运算，增强了SQL语句的功能性。 存储过程是预编译的，然后将结果储存到内存中，所以第二次开始执行速度变快。 减少了网络流量，因为需要修改数据的话，只需要调用它的名字">
+<meta property="og:locale" content="en-US">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一分钟的数据库知识">
+<meta name="twitter:description" content="什么是存储过程我们最原始操作数据库的流程是输入SQL命令，mysql引擎语法分析，之后编译执行。存储过程将语法分析和编译只执行一次，以后直接可以调用。它是SQL语句和控制语句的预编译集合。 优点：  可以写控制语句，这样就可以完成复杂的运算，增强了SQL语句的功能性。 存储过程是预编译的，然后将结果储存到内存中，所以第二次开始执行速度变快。 减少了网络流量，因为需要修改数据的话，只需要调用它的名字">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>一分钟的数据库知识</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2017/08/16/SSM实战II/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/08/28/数据库相关/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/08/28/数据库相关/&text=一分钟的数据库知识"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/08/28/数据库相关/&is_video=false&description=一分钟的数据库知识"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一分钟的数据库知识&body=Check out this article: http://sihan.world/2017/08/28/数据库相关/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/08/28/数据库相关/&name=一分钟的数据库知识&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是存储过程"><span class="toc-number">1.</span> <span class="toc-text">什么是存储过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是索引"><span class="toc-number">2.</span> <span class="toc-text">什么是索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-number">3.</span> <span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是三范式"><span class="toc-number">4.</span> <span class="toc-text">什么是三范式</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        一分钟的数据库知识
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-08-28T14:32:24.000Z" itemprop="datePublished">2017-08-28</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="什么是存储过程"><a href="#什么是存储过程" class="headerlink" title="什么是存储过程"></a>什么是存储过程</h2><p>我们最原始操作数据库的流程是输入SQL命令，mysql引擎语法分析，之后编译执行。存储过程将语法分析和编译只执行一次，以后直接可以调用。它是SQL语句和控制语句的预编译集合。</p>
+<p>优点：</p>
+<ul>
+<li>可以写控制语句，这样就可以完成复杂的运算，增强了SQL语句的功能性。</li>
+<li>存储过程是预编译的，然后将结果储存到内存中，所以第二次开始执行速度变快。</li>
+<li>减少了网络流量，因为需要修改数据的话，只需要调用它的名字和设置的数值就可以了。</li>
+</ul>
+<p>写法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//创建</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> sp1() <span class="keyword">SELECT</span> <span class="keyword">VERSION</span>();</span><br><span class="line">//获取结果</span><br><span class="line"><span class="keyword">CALL</span> sp1();</span><br><span class="line">//删除</span><br><span class="line">DELIMITER //</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> remove(<span class="keyword">IN</span> p_id <span class="built_in">INT</span> <span class="keyword">UNSIGNED</span>)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = p_id;</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line">//</span><br></pre></td></tr></table></figure>
+<p>参数类型：</p>
+<p>IN 表示必须在调用存储过程时指定</p>
+<p>OUT表示可以被过程改变，并可以返回</p>
+<p>INOUT在调用时指定，可以改变，并可以返回</p>
+<h2 id="什么是索引"><a href="#什么是索引" class="headerlink" title="什么是索引"></a>什么是索引</h2><p><a href="https://segmentfault.com/q/1010000003832312" target="_blank" rel="noopener">参考文献</a></p>
+<p>索引：为了更快的查找数据。</p>
+<p>从逻辑角度来看：</p>
+<ul>
+<li>普通索引或单列索引，可以使用重复的值。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">创建表的时候同时创建索引：<span class="keyword">CREATE</span> <span class="keyword">TABLE</span> TABLE_NAME ([字段描述省略…], <span class="keyword">INDEX</span> [INDEXNAME](INDEXCOLS);</span><br><span class="line">直接创建索引：<span class="keyword">CREATE</span> <span class="keyword">INDEX</span>[INDEXNAME] <span class="keyword">ON</span> TABLE_NAME(INDEXCOLS);</span><br><span class="line">修改表的索引：<span class="keyword">ALTER</span> <span class="keyword">TABLE</span> TABLE_NAME <span class="keyword">ADD</span> <span class="keyword">INDEX</span> [INDEXNAME](INDEXCOLS);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>多列索引，就是后面的index有多个，而且顺序很重要，遵循最左前缀：查询条件中的所有字段需要从左边起按顺序出现在多列索引中。</li>
+</ul>
+<ul>
+<li>唯一索引，唯一的索引意味着两个行不能拥有相同的索引值。主键索引就是一种特殊的唯一索引。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">创建表的时候同时创建索引：<span class="keyword">CREATE</span> <span class="keyword">TABLE</span> TABLE_NAME ([字段描述省略…], <span class="keyword">UNIQUE</span> [INDEXNAME](INDEXCOLS);</span><br><span class="line">直接创建索引：<span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> <span class="keyword">INDEX</span>[INDEXNAME] <span class="keyword">ON</span> TABLE_NAME(INDEXCOLS);</span><br><span class="line">修改表的索引：<span class="keyword">ALTER</span> <span class="keyword">TABLE</span> TABLE_NAME <span class="keyword">ADD</span> <span class="keyword">UNIQUE</span> [INDEXNAME](INDEXCOLS);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>全文索引fulltext，主要用来查找文本中的关键字，而不是直接与索引中的值相比较。Full-text索引跟其它索引大不相同，它更像是一个搜索引擎，而不是简单的WHERE语句的参数匹配。你可以对某列分别进行full-text索引和B-Tree索引，两者互不冲突。Full-text索引配合MATCH AGAINST操作使用，而不是一般的WHERE语句加LIKE。</li>
+</ul>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>事务隔离级别：</p>
+<p><a href="http://blog.csdn.net/fg2006/article/details/6937413" target="_blank" rel="noopener">参考文献</a></p>
+<ul>
+<li>read-uncommitted：即使另一个人没提交操作，我也可以读到他的更改，这就是脏读。</li>
+<li>read-committed：只有另一个人提交了，我才能看到，会产生不可重复读、幻读。</li>
+<li>repeatable read：另一个人即使操作了，在我自己提交之前都看不到，我读的是重复的值，会产生幻读。</li>
+<li>serializable：另一个人在修改的时候，我根本就不能操作同一个表，只有他提交了之后我才可以操作，脏读幻读都避免。</li>
+</ul>
+<p>##数据库的几种锁</p>
+<p>行级锁：只针对当前操作行进行加锁，分为共享锁和排他锁：</p>
+<p>共享锁：也叫读锁，其他用户可以并发读数据，但是不能写</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">LOCK</span> <span class="keyword">IN</span> <span class="keyword">SHARE</span> <span class="keyword">MODE</span></span><br></pre></td></tr></table></figure>
+<p>排它锁：又称为写锁，事务a给数据加上排他锁之后，其他事物就不能再碰这个数据了。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">FOR</span> <span class="keyword">UPDATE</span></span><br></pre></td></tr></table></figure>
+<p>表级锁：对整张表加锁。</p>
+<p>页级锁：一次锁定相邻的一组记录。</p>
+<p>乐观锁：顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，可以使用版本号等机制。</p>
+<p>例如适用版本号实现乐观锁</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1.查询出商品信息</span><br><span class="line"><span class="keyword">select</span> (<span class="keyword">status</span>,<span class="keyword">status</span>,<span class="keyword">version</span>) <span class="keyword">from</span> t_goods <span class="keyword">where</span> <span class="keyword">id</span>=<span class="comment">#&#123;id&#125;</span></span><br><span class="line"><span class="number">2.</span>根据商品信息生成订单</span><br><span class="line"><span class="number">3.</span>修改商品<span class="keyword">status</span>为<span class="number">2</span></span><br><span class="line"><span class="keyword">update</span> t_goods </span><br><span class="line"><span class="keyword">set</span> <span class="keyword">status</span>=<span class="number">2</span>,<span class="keyword">version</span>=<span class="keyword">version</span>+<span class="number">1</span></span><br><span class="line"><span class="keyword">where</span> <span class="keyword">id</span>=<span class="comment">#&#123;id&#125; and version=#&#123;version&#125;;</span></span><br></pre></td></tr></table></figure>
+<p>悲观锁: 顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//0.开始事务</span><br><span class="line"><span class="keyword">begin</span>;/<span class="keyword">begin</span> <span class="keyword">work</span>;/<span class="keyword">start</span> <span class="keyword">transaction</span>; (三者选一就可以)</span><br><span class="line">//1.查询出商品信息</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">status</span> <span class="keyword">from</span> t_goods <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span><br><span class="line">//2.根据商品信息生成订单</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t_orders (<span class="keyword">id</span>,goods_id) <span class="keyword">values</span> (<span class="literal">null</span>,<span class="number">1</span>);</span><br><span class="line">//3.修改商品status为2</span><br><span class="line"><span class="keyword">update</span> t_goods <span class="keyword">set</span> <span class="keyword">status</span>=<span class="number">2</span>;</span><br><span class="line">//4.提交事务</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="什么是三范式"><a href="#什么是三范式" class="headerlink" title="什么是三范式"></a>什么是三范式</h2><ul>
+<li>第一范式（1NF）：字段不可分</li>
+</ul>
+<p>也设计不出来。</p>
+<ul>
+<li>第二范式（2NF）：有主键，非主键字段依赖主键</li>
+</ul>
+<p>不符合第二范式的例子: </p>
+<p>表:学号, 姓名, 年龄, 课程名称, 成绩, 学分; </p>
+<p>这个表明显说明了两个事务:学生信息, 课程信息; </p>
+<p><strong>存在问题: </strong><br>数据冗余，每条记录都含有相同信息；<br>删除异常：删除所有学生成绩，就把课程信息全删除了；<br>插入异常：学生未选课，无法记录进数据库；<br>更新异常：调整课程学分，所有行都调整。 </p>
+<p>修正: </p>
+<p>学生：Student(学号, 姓名, 年龄)； </p>
+<p>课程：Course(课程名称, 学分)； </p>
+<p>选课关系：SelectCourse(学号, 课程名称, 成绩)。 </p>
+<p>满足第2范式只消除了插入异常。 </p>
+<ul>
+<li>第三范式（3NF）：非主键字段不能相互依赖</li>
+</ul>
+<p>不符合第三范式的例子: </p>
+<p>学号, 姓名, 年龄, 所在学院, 学院联系电话，关键字为单一关键字”学号”; </p>
+<p>存在依赖传递: (学号) → (所在学院) → (学院地点, 学院电话) </p>
+<p>存在问题: </p>
+<p>数据冗余:有重复值； </p>
+<p>更新异常：有重复的冗余信息，修改时需要同时修改多条记录，否则会出现数据不一致的情况 </p>
+<p>删除异常 </p>
+<p>修正：<br>学生：(学号, 姓名, 年龄, 所在学院)；<br>学院：(学院, 地点, 电话)。 </p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是存储过程"><span class="toc-number">1.</span> <span class="toc-text">什么是存储过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是索引"><span class="toc-number">2.</span> <span class="toc-text">什么是索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-number">3.</span> <span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是三范式"><span class="toc-number">4.</span> <span class="toc-text">什么是三范式</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/08/28/数据库相关/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/08/28/数据库相关/&text=一分钟的数据库知识"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/08/28/数据库相关/&is_video=false&description=一分钟的数据库知识"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一分钟的数据库知识&body=Check out this article: http://sihan.world/2017/08/28/数据库相关/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/08/28/数据库相关/&title=一分钟的数据库知识"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/08/28/数据库相关/&name=一分钟的数据库知识&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

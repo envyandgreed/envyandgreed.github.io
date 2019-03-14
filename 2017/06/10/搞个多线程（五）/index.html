@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="今天我们来看看Java的内存模型。 Java内存模型Java Merory Model，描述了变量存储的一些底层细节。  如上图所示，所有的变量都保存在主内存中，但是每个线程都有自己的独立工作内存，并将变量副本存储到该线程中。此外需要注意两点：  线程对共享数据的操作只能在独立内存中进行，不能在主内存中直接读写。 线程间访问工作内存中的变量，只能通过主内存。  实现共享变量的可见性必须保证两点：">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搞个多线程（五）">
+<meta property="og:url" content="http://sihan.world/2017/06/10/搞个多线程（五）/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="今天我们来看看Java的内存模型。 Java内存模型Java Merory Model，描述了变量存储的一些底层细节。  如上图所示，所有的变量都保存在主内存中，但是每个线程都有自己的独立工作内存，并将变量副本存储到该线程中。此外需要注意两点：  线程对共享数据的操作只能在独立内存中进行，不能在主内存中直接读写。 线程间访问工作内存中的变量，只能通过主内存。  实现共享变量的可见性必须保证两点：">
+<meta property="og:locale" content="en-US">
+<meta property="og:image" content="http://sihan.world/img/jmm.png">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搞个多线程（五）">
+<meta name="twitter:description" content="今天我们来看看Java的内存模型。 Java内存模型Java Merory Model，描述了变量存储的一些底层细节。  如上图所示，所有的变量都保存在主内存中，但是每个线程都有自己的独立工作内存，并将变量副本存储到该线程中。此外需要注意两点：  线程对共享数据的操作只能在独立内存中进行，不能在主内存中直接读写。 线程间访问工作内存中的变量，只能通过主内存。  实现共享变量的可见性必须保证两点：">
+<meta name="twitter:image" content="http://sihan.world/img/jmm.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>搞个多线程（五）</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/06/12/JVM（一）内存区域分析/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/06/09/搞个多线程（四）/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/10/搞个多线程（五）/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/10/搞个多线程（五）/&text=搞个多线程（五）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/10/搞个多线程（五）/&is_video=false&description=搞个多线程（五）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=搞个多线程（五）&body=Check out this article: http://sihan.world/2017/06/10/搞个多线程（五）/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/10/搞个多线程（五）/&name=搞个多线程（五）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#synchronized"><span class="toc-number">1.</span> <span class="toc-text">synchronized</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重排序"><span class="toc-number">2.</span> <span class="toc-text">重排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile"><span class="toc-number">3.</span> <span class="toc-text">volatile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile的适用场景"><span class="toc-number">4.</span> <span class="toc-text">volatile的适用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#synchronized与volatile的比较"><span class="toc-number">5.</span> <span class="toc-text">synchronized与volatile的比较</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        搞个多线程（五）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-06-10T13:17:36.000Z" itemprop="datePublished">2017-06-10</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>今天我们来看看Java的内存模型。</p>
+<p>Java内存模型Java Merory Model，描述了变量存储的一些底层细节。</p>
+<p><img src="/img/jmm.png" alt="jmm"></p>
+<p>如上图所示，所有的变量都保存在主内存中，但是每个线程都有自己的独立工作内存，并将变量副本存储到该线程中。此外需要注意两点：</p>
+<ul>
+<li>线程对共享数据的操作只能在独立内存中进行，不能在主内存中直接读写。</li>
+<li>线程间访问工作内存中的变量，只能通过主内存。</li>
+</ul>
+<p>实现共享变量的可见性必须保证两点：</p>
+<ul>
+<li>线程修改后的共享变量能及时从工作内存刷新到主内存中。</li>
+<li>其他线程能及时把共享变量的最新值从主内存中更新到工作内存中。</li>
+</ul>
+<p>Java从语言层米啊支持可见性的实现方式有两种：</p>
+<ul>
+<li>synchronized</li>
+<li>volatile</li>
+</ul>
+<h2 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h2><p>除了有可见性还具有原子性。关于synchronized有两条规定：</p>
+<ul>
+<li>线程解锁前，必须把共享变量的最新值刷到主内存去。</li>
+<li>线程加锁时，要清空工作内存的共享变量值，从主内存中重新获取。</li>
+</ul>
+<p>这两条操作保证了线程解锁前对共享变量的操作在下次加锁前对其他线程可见。</p>
+<p>synchronized实现可见性的过程：</p>
+<p>1.获得互斥锁</p>
+<p>2.清空工作内存</p>
+<p>3.从主内存中拷贝共享变量的最新值到工作内存</p>
+<p>4.执行代码</p>
+<p>5.把修改后的变量值更新到主内存</p>
+<p>6.释放锁</p>
+<h2 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h2><p>编译器或处理器为乐提高性能而做的优化，使代码的执行顺序和书写顺序不相同，分为编译器优化，处理器指令级并行重排序，内存系统的重排序。</p>
+<p>as-if-serial：无论如何重排序，程序执行的结果与代码顺序执行的结果相一致。（仍进行重排序）</p>
+<p>导致共享变量在线程间不可见的原因以及解决方案：</p>
+<p>1.线程交叉执行。synchronized的原子性解决问题。</p>
+<p>2.重排序+线程交叉执行。synchronized的原子性解决问题。</p>
+<p>3.共享变量更新后的值没有在主内存与工作内存之间及时更新。依然是synchronized。</p>
+<h2 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h2><p>只具有可见性，而不具有原子性。</p>
+<p>volatile原理：对volatile变量执行写操作时，在操作结尾加一条store屏障指令，会把CPU写缓存强制刷新到主内存，还能防止处理器把volatile前的变量重排序到volatile之后。对其进行读操作时，会在读操作前加一条load屏障指令，在读取时强制从主内存中读取。也就是说volatile 变量每次被线程访问时，都会强制刷新。并将最新的值刷新到主内存中。</p>
+<p>原子性：</p>
+<p>volatile不具有原子性，synchronized具有原子性，此外还可以使用Lock。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  a++;</span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">  lock.unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="volatile的适用场景"><a href="#volatile的适用场景" class="headerlink" title="volatile的适用场景"></a>volatile的适用场景</h2><p>1.对变量的写入操作不依赖当前值</p>
+<p>   不满足： num++; num=num*5 …</p>
+<p>   满足：    布尔变量等等</p>
+<p>2.该变量没有包含在具有其他变量的不变式中</p>
+<p>   即程序中有多个volatile变量时，各自要独立。如a,b;  如果有a&lt;b这样的式子，就不满足。</p>
+<p>所以volatie的适用范围不如synchronized大。</p>
+<h2 id="synchronized与volatile的比较"><a href="#synchronized与volatile的比较" class="headerlink" title="synchronized与volatile的比较"></a>synchronized与volatile的比较</h2><p>1.volatile不需要加锁，比synchronized轻量级，不会造成线程阻塞。</p>
+<p>2.synchronized既可以保证可见性，又可以保证原子性；而volatile只能保证可见性。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#synchronized"><span class="toc-number">1.</span> <span class="toc-text">synchronized</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重排序"><span class="toc-number">2.</span> <span class="toc-text">重排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile"><span class="toc-number">3.</span> <span class="toc-text">volatile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile的适用场景"><span class="toc-number">4.</span> <span class="toc-text">volatile的适用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#synchronized与volatile的比较"><span class="toc-number">5.</span> <span class="toc-text">synchronized与volatile的比较</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/10/搞个多线程（五）/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/10/搞个多线程（五）/&text=搞个多线程（五）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/10/搞个多线程（五）/&is_video=false&description=搞个多线程（五）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=搞个多线程（五）&body=Check out this article: http://sihan.world/2017/06/10/搞个多线程（五）/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/10/搞个多线程（五）/&title=搞个多线程（五）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/10/搞个多线程（五）/&name=搞个多线程（五）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

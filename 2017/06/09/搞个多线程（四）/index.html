@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="由于多线程这一书中的内容过于抽象，所以我们结合面试中常见的几种概念进行梳理。 这一章我们讲解活跃性的危险：死锁&amp;amp;饥饿&amp;amp;活锁。 死锁，就是指一个A线程等待B线程所占有的资源，而B线程则在等待A线程所占有的资源，这就形成了死锁。数据库系统设计中考虑到了死锁的，当他检测到发生死锁时，将选择一个牺牲者并释放他的资源，从而使程序继续进行。而对于JVM，当一组Java程序出现死锁时，这些线程将">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搞个多线程（四）">
+<meta property="og:url" content="http://sihan.world/2017/06/09/搞个多线程（四）/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="由于多线程这一书中的内容过于抽象，所以我们结合面试中常见的几种概念进行梳理。 这一章我们讲解活跃性的危险：死锁&amp;amp;饥饿&amp;amp;活锁。 死锁，就是指一个A线程等待B线程所占有的资源，而B线程则在等待A线程所占有的资源，这就形成了死锁。数据库系统设计中考虑到了死锁的，当他检测到发生死锁时，将选择一个牺牲者并释放他的资源，从而使程序继续进行。而对于JVM，当一组Java程序出现死锁时，这些线程将">
+<meta property="og:locale" content="en-US">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搞个多线程（四）">
+<meta name="twitter:description" content="由于多线程这一书中的内容过于抽象，所以我们结合面试中常见的几种概念进行梳理。 这一章我们讲解活跃性的危险：死锁&amp;amp;饥饿&amp;amp;活锁。 死锁，就是指一个A线程等待B线程所占有的资源，而B线程则在等待A线程所占有的资源，这就形成了死锁。数据库系统设计中考虑到了死锁的，当他检测到发生死锁时，将选择一个牺牲者并释放他的资源，从而使程序继续进行。而对于JVM，当一组Java程序出现死锁时，这些线程将">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>搞个多线程（四）</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/06/10/搞个多线程（五）/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/06/07/搞个多线程（三）/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/09/搞个多线程（四）/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/09/搞个多线程（四）/&text=搞个多线程（四）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/09/搞个多线程（四）/&is_video=false&description=搞个多线程（四）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=搞个多线程（四）&body=Check out this article: http://sihan.world/2017/06/09/搞个多线程（四）/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/09/搞个多线程（四）/&name=搞个多线程（四）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        搞个多线程（四）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-06-09T14:20:32.000Z" itemprop="datePublished">2017-06-09</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>由于多线程这一书中的内容过于抽象，所以我们结合面试中常见的几种概念进行梳理。</p>
+<p>这一章我们讲解活跃性的危险：死锁&amp;饥饿&amp;活锁。</p>
+<p>死锁，就是指一个A线程等待B线程所占有的资源，而B线程则在等待A线程所占有的资源，这就形成了死锁。数据库系统设计中考虑到了死锁的，当他检测到发生死锁时，将选择一个牺牲者并释放他的资源，从而使程序继续进行。而对于JVM，当一组Java程序出现死锁时，这些线程将永远不能再使用了。</p>
+<ul>
+<li><p>简单的锁顺序死锁：A锁住了left，B锁住了right，A试图访问right，B试图访问left</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LeftRightDeadlock</span></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Object left = <span class="keyword">new</span> Object();</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Object right = <span class="keyword">new</span> Object();</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leftRight</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span>(left)&#123;</span><br><span class="line">      <span class="keyword">synchronized</span>(right)&#123;</span><br><span class="line">        doSomething();</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rightLeft</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(right)&#123;</span><br><span class="line">      <span class="keyword">synchronized</span>(left)&#123;</span><br><span class="line">        doSomethingElse();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>动态锁顺序死锁 ：锁的顺序取决于外部输入传递给函数的参数顺序，所以两个线程同时调用函数，A线程从X向Y转账，B线程从Y向X转账。那么可能A获得myAccount的锁需要yourAccount的锁，B正好相反。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">publci <span class="keyword">void</span> <span class="title">transferMoney</span><span class="params">(Account fromAccount,Account toAccount,DollarAmount amount)</span></span></span><br><span class="line"><span class="function">	<span class="keyword">throws</span> InsufficientFundsException</span>&#123;</span><br><span class="line">  <span class="keyword">synchronized</span>(fromAccount)&#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(toAccount)&#123;</span><br><span class="line">      <span class="keyword">if</span>(fromAccount.getBalance().compareTo(amount) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InsufficientFundsException();</span><br><span class="line">      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        fromAccount.debit(amount);</span><br><span class="line">        toAccount.credit(amount);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了解决这个问题，我们需要定义锁的顺序：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">....</span><br><span class="line"><span class="comment">//上边都一样</span></span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Helper</span></span>&#123;</span><br><span class="line">  <span class="function">publci <span class="keyword">void</span> <span class="title">transferMoney</span><span class="params">(Account fromAccount,Account toAccount,DollarAmount amount)</span></span></span><br><span class="line"><span class="function">	<span class="keyword">throws</span> InsufficientFundsException</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(fromAccount.getBalance().compareTo(amount) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InsufficientFundsException();</span><br><span class="line">      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        fromAccount.debit(amount);</span><br><span class="line">        toAccount.credit(amount);</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> fromHash = System.identityHashCode(fromAcct);</span><br><span class="line"><span class="keyword">int</span> toHash = System.identityHashCode(toAcct);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(fromHash &lt; toHash)&#123;</span><br><span class="line">   <span class="keyword">synchronized</span>(fromAcc)&#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(toAcc)&#123;</span><br><span class="line">      <span class="keyword">new</span> Helper().transfer();</span><br><span class="line">    &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(fromHash &gt; toHash)&#123;</span><br><span class="line">   <span class="keyword">synchronized</span>(toAcc)&#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(fromAcc)&#123;</span><br><span class="line">      <span class="keyword">new</span> Helper().transfer();</span><br><span class="line">    &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  <span class="keyword">synchronized</span>(tieLock)&#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(fromAcc)&#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(toAcc)&#123;</span><br><span class="line">      <span class="keyword">new</span> Helper().transfer();</span><br><span class="line">    &#125;</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们总是先获取hashcode值比较小的那个账号的锁，如果遇到hashcode相等的情况，那么在获得两个锁之前，先获得一个加时锁tieLock，从而保证一次只有一个线程获得这两个锁。</p>
+<p>​</p>
+</li>
+<li><p>开放调用</p>
+<p>如果调用某个方法时，不需要持有锁，那么调用被称为开放调用，简单来说开放调用就是把本来写在方法上的synchronized写到了方法内部，将代码同步块仅用于保护那些设计共享状态的操作。</p>
+</li>
+<li><p>资源死锁</p>
+<p>和普通死锁很像，A线程与数据库D1链接，等待与D2链接，B线程与D2链接等待与D1链接。</p>
+</li>
+<li><p>线程饥饿死锁</p>
+<p>一个任务提交另一个任务，并等待被提交任务在单线程的Executor中执行完成。</p>
+</li>
+<li><p>饥饿</p>
+<p>当线程由于无法访问它所需要的资源而不能继续执行时，就发生了饥饿。引发饥饿的最常见资源就是cpu时钟。通常，我们尽量不要改变线程的优先级。只要改变了线程的优先级，程序的行为就将与平台相关，并且会导致发生饥饿问题的风险。</p>
+</li>
+<li><p>活锁</p>
+<p>活锁是另一种形式的活跃性问题，该问题尽管不会阻塞线程，但也不能继续执行，因为线程将不断重复执行相同的操作，而且总会失败。</p>
+<p>当多个相互协作的线程都对彼此进行响应从而修改各自的状态，并使得任何一个线程都无法继续执行时，就发生了活锁。就像两个过于礼貌的人，在路上面对面相遇，彼此都让出对方的路，然后在另一边相遇，因此他们就反复地避让了下去。解决方法一般是引入随机性，比如两个人都在一个随机的时间后重试，这样可以有效地避免活锁发生。</p>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/09/搞个多线程（四）/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/09/搞个多线程（四）/&text=搞个多线程（四）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/09/搞个多线程（四）/&is_video=false&description=搞个多线程（四）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=搞个多线程（四）&body=Check out this article: http://sihan.world/2017/06/09/搞个多线程（四）/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/09/搞个多线程（四）/&title=搞个多线程（四）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/09/搞个多线程（四）/&name=搞个多线程（四）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

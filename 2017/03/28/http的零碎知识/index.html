@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="URL输入后会发生什么主体流程：  http客户端发起请求，创建端口 http服务器在端口监听客户端请求 http服务器向客户端返回状态和内容  解析URL的过程：  浏览器搜索自身的缓存 搜索操作系统自身的DNS缓存 读取本地的HOST文件 浏览器发起一个DNS的一个系统调用（向运营商）： 运营商查看自身缓存 运营商服务器发起一个迭代的DNS解析请求： 先寻找根域的DNS解析地址 在寻找com域">
+<meta name="keywords" content="HTTP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP知识の零碎整理">
+<meta property="og:url" content="http://sihan.world/2017/03/28/http的零碎知识/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="URL输入后会发生什么主体流程：  http客户端发起请求，创建端口 http服务器在端口监听客户端请求 http服务器向客户端返回状态和内容  解析URL的过程：  浏览器搜索自身的缓存 搜索操作系统自身的DNS缓存 读取本地的HOST文件 浏览器发起一个DNS的一个系统调用（向运营商）： 运营商查看自身缓存 运营商服务器发起一个迭代的DNS解析请求： 先寻找根域的DNS解析地址 在寻找com域">
+<meta property="og:locale" content="en-US">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP知识の零碎整理">
+<meta name="twitter:description" content="URL输入后会发生什么主体流程：  http客户端发起请求，创建端口 http服务器在端口监听客户端请求 http服务器向客户端返回状态和内容  解析URL的过程：  浏览器搜索自身的缓存 搜索操作系统自身的DNS缓存 读取本地的HOST文件 浏览器发起一个DNS的一个系统调用（向运营商）： 运营商查看自身缓存 运营商服务器发起一个迭代的DNS解析请求： 先寻找根域的DNS解析地址 在寻找com域">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>HTTP知识の零碎整理</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/06/05/Java的内部类/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/03/28/js中的引用传递和按值传递/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/http的零碎知识/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/http的零碎知识/&text=HTTP知识の零碎整理"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/http的零碎知识/&is_video=false&description=HTTP知识の零碎整理"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HTTP知识の零碎整理&body=Check out this article: http://sihan.world/2017/03/28/http的零碎知识/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/http的零碎知识/&name=HTTP知识の零碎整理&description=&lt;h3 id=&#34;URL输入后会发生什么&#34;&gt;&lt;a href=&#34;#URL输入后会发生什么&#34; class=&#34;headerlink&#34; title=&#34;URL输入后会发生什么&#34;&gt;&lt;/a&gt;URL输入后会发生什么&lt;/h3&gt;&lt;p&gt;主体流程：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;http客户端发起请求，创建端口&lt;/li&gt;
+&lt;li&gt;http服务器在端口监听客户端请求&lt;/li&gt;
+&lt;li&gt;http服务器向客户端返回状态和内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;解析URL的过程：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;浏览器搜索自身的缓存&lt;/li&gt;
+&lt;li&gt;搜索操作系统自身的DNS缓存&lt;/li&gt;
+&lt;li&gt;读取本地的HOST文件&lt;/li&gt;
+&lt;li&gt;浏览器发起一个DNS的一个系统调用（向运营商）：&lt;ul&gt;
+&lt;li&gt;运营商查看自身缓存&lt;/li&gt;
+&lt;li&gt;运营商服务器发起一个迭代的DNS解析请求：&lt;ul&gt;
+&lt;li&gt;先寻找根域的DNS解析地址&lt;/li&gt;
+&lt;li&gt;在寻找com域的解析地址&lt;/li&gt;
+&lt;li&gt;然后寻找XXXX.com域的解析地址&lt;/li&gt;
+&lt;li&gt;然后服务器把结果返回给操作系统的内核同时缓存起来&lt;/li&gt;
+&lt;li&gt;操作系统将地址传递给浏览器&lt;/li&gt;
+&lt;li&gt;浏览器得到IP地址&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;浏览器获得对应的IP地址后，发起HTTP“三次握手”&lt;/li&gt;
+&lt;li&gt;TCP/IP连接建立起来后，浏览器就可以向服务器发送HTTP请求了，比如使用HTTP的GET方法请求一个根域里的一个域名，协议可以采用HTTP1.0的一个协议&lt;/li&gt;
+&lt;li&gt;服务器端接收请求，根据路径参数，经过后端的一些处理之后，把处理后的一个结果的数据返回给浏览器，如果是页面就会把完整的HTML页面代码返回给浏览器。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;HTTP请求&#34;&gt;&lt;a href=&#34;#HTTP请求&#34; class=&#34;headerlink&#34; title=&#34;HTTP请求&#34;&gt;&lt;/a&gt;HTTP请求&lt;/h3&gt;&lt;p&gt;可以简单的拆分为，请求和响应。两者都会发送http头和正文信息。&lt;br&gt;HTTP头发送的是一些附加的信息：内容类型、服务器发送响应的日期、HTTP状态码等。&lt;br&gt;正文信息发送用户的表单数据等。&lt;br&gt;各种请求头部需要打开浏览器慢慢查看，不过一般面试好像很少问这个。&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#URL输入后会发生什么"><span class="toc-number">1.</span> <span class="toc-text">URL输入后会发生什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP请求"><span class="toc-number">2.</span> <span class="toc-text">HTTP请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#状态码"><span class="toc-number">3.</span> <span class="toc-text">状态码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求方法"><span class="toc-number">4.</span> <span class="toc-text">请求方法</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HTTP知识の零碎整理
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-03-28T08:53:40.000Z" itemprop="datePublished">2017-03-28</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/HTTP/">HTTP</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="URL输入后会发生什么"><a href="#URL输入后会发生什么" class="headerlink" title="URL输入后会发生什么"></a>URL输入后会发生什么</h3><p>主体流程：</p>
+<ul>
+<li>http客户端发起请求，创建端口</li>
+<li>http服务器在端口监听客户端请求</li>
+<li>http服务器向客户端返回状态和内容</li>
+</ul>
+<p>解析URL的过程：</p>
+<ul>
+<li>浏览器搜索自身的缓存</li>
+<li>搜索操作系统自身的DNS缓存</li>
+<li>读取本地的HOST文件</li>
+<li>浏览器发起一个DNS的一个系统调用（向运营商）：<ul>
+<li>运营商查看自身缓存</li>
+<li>运营商服务器发起一个迭代的DNS解析请求：<ul>
+<li>先寻找根域的DNS解析地址</li>
+<li>在寻找com域的解析地址</li>
+<li>然后寻找XXXX.com域的解析地址</li>
+<li>然后服务器把结果返回给操作系统的内核同时缓存起来</li>
+<li>操作系统将地址传递给浏览器</li>
+<li>浏览器得到IP地址</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>浏览器获得对应的IP地址后，发起HTTP“三次握手”</li>
+<li>TCP/IP连接建立起来后，浏览器就可以向服务器发送HTTP请求了，比如使用HTTP的GET方法请求一个根域里的一个域名，协议可以采用HTTP1.0的一个协议</li>
+<li>服务器端接收请求，根据路径参数，经过后端的一些处理之后，把处理后的一个结果的数据返回给浏览器，如果是页面就会把完整的HTML页面代码返回给浏览器。</li>
+</ul>
+<h3 id="HTTP请求"><a href="#HTTP请求" class="headerlink" title="HTTP请求"></a>HTTP请求</h3><p>可以简单的拆分为，请求和响应。两者都会发送http头和正文信息。<br>HTTP头发送的是一些附加的信息：内容类型、服务器发送响应的日期、HTTP状态码等。<br>正文信息发送用户的表单数据等。<br>各种请求头部需要打开浏览器慢慢查看，不过一般面试好像很少问这个。<br><a id="more"></a></p>
+<h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><ul>
+<li>1XX：指示信息，表示请求已经接受，继续处理</li>
+<li>2XX：表示成功接受，已经处理</li>
+<li>3XX：重定向</li>
+<li>4XX：客户端错误</li>
+<li>5XX：服务器端错误</li>
+<li>200：请求成功</li>
+<li>400：客户端请求语法错误，服务器无法理解</li>
+<li>401：请求没有授权</li>
+<li>403：服务器接受请求，但是拒绝执行，因为没有权限</li>
+<li>404：没找到，请求资源不存在，也可能是URL输入错误</li>
+<li>500：服务器端错误</li>
+<li>503：服务器端暂时无法处理请求</li>
+</ul>
+<h3 id="请求方法"><a href="#请求方法" class="headerlink" title="请求方法"></a>请求方法</h3><ul>
+<li>GET：输入URL地址拿到页面这些都是GET方式，获取数据</li>
+<li>POST：向指定资源提交数据，比如上传视频</li>
+<li>PUT：向指定的资源位置更新内容，比如更新用户头像</li>
+<li>DELETE：请求服务器删除标识资源</li>
+<li>HEAD：与GET相同，请求数据，好处是不用获取全部数据内容就可以获得想要的数据</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#URL输入后会发生什么"><span class="toc-number">1.</span> <span class="toc-text">URL输入后会发生什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP请求"><span class="toc-number">2.</span> <span class="toc-text">HTTP请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#状态码"><span class="toc-number">3.</span> <span class="toc-text">状态码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求方法"><span class="toc-number">4.</span> <span class="toc-text">请求方法</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/http的零碎知识/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/http的零碎知识/&text=HTTP知识の零碎整理"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/http的零碎知识/&is_video=false&description=HTTP知识の零碎整理"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HTTP知识の零碎整理&body=Check out this article: http://sihan.world/2017/03/28/http的零碎知识/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/http的零碎知识/&title=HTTP知识の零碎整理"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/http的零碎知识/&name=HTTP知识の零碎整理&description=&lt;h3 id=&#34;URL输入后会发生什么&#34;&gt;&lt;a href=&#34;#URL输入后会发生什么&#34; class=&#34;headerlink&#34; title=&#34;URL输入后会发生什么&#34;&gt;&lt;/a&gt;URL输入后会发生什么&lt;/h3&gt;&lt;p&gt;主体流程：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;http客户端发起请求，创建端口&lt;/li&gt;
+&lt;li&gt;http服务器在端口监听客户端请求&lt;/li&gt;
+&lt;li&gt;http服务器向客户端返回状态和内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;解析URL的过程：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;浏览器搜索自身的缓存&lt;/li&gt;
+&lt;li&gt;搜索操作系统自身的DNS缓存&lt;/li&gt;
+&lt;li&gt;读取本地的HOST文件&lt;/li&gt;
+&lt;li&gt;浏览器发起一个DNS的一个系统调用（向运营商）：&lt;ul&gt;
+&lt;li&gt;运营商查看自身缓存&lt;/li&gt;
+&lt;li&gt;运营商服务器发起一个迭代的DNS解析请求：&lt;ul&gt;
+&lt;li&gt;先寻找根域的DNS解析地址&lt;/li&gt;
+&lt;li&gt;在寻找com域的解析地址&lt;/li&gt;
+&lt;li&gt;然后寻找XXXX.com域的解析地址&lt;/li&gt;
+&lt;li&gt;然后服务器把结果返回给操作系统的内核同时缓存起来&lt;/li&gt;
+&lt;li&gt;操作系统将地址传递给浏览器&lt;/li&gt;
+&lt;li&gt;浏览器得到IP地址&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;浏览器获得对应的IP地址后，发起HTTP“三次握手”&lt;/li&gt;
+&lt;li&gt;TCP/IP连接建立起来后，浏览器就可以向服务器发送HTTP请求了，比如使用HTTP的GET方法请求一个根域里的一个域名，协议可以采用HTTP1.0的一个协议&lt;/li&gt;
+&lt;li&gt;服务器端接收请求，根据路径参数，经过后端的一些处理之后，把处理后的一个结果的数据返回给浏览器，如果是页面就会把完整的HTML页面代码返回给浏览器。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;HTTP请求&#34;&gt;&lt;a href=&#34;#HTTP请求&#34; class=&#34;headerlink&#34; title=&#34;HTTP请求&#34;&gt;&lt;/a&gt;HTTP请求&lt;/h3&gt;&lt;p&gt;可以简单的拆分为，请求和响应。两者都会发送http头和正文信息。&lt;br&gt;HTTP头发送的是一些附加的信息：内容类型、服务器发送响应的日期、HTTP状态码等。&lt;br&gt;正文信息发送用户的表单数据等。&lt;br&gt;各种请求头部需要打开浏览器慢慢查看，不过一般面试好像很少问这个。&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

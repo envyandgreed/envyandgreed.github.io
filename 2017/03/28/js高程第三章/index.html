@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="第三章基本法语法1.变量函数名以及操作符，都区分大小写。2.标识符必须以字母、下划线或$开始。3.严格模式，’’use strict’’可以用于在函数声明内部或者文件顶部。 数据类型1.有六种:null,undefined,boolean,number,string,object。2.typeof可以返回undefined\boolean\string\number\object\function">
+<meta name="keywords" content="Javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS高程第三章：基本法">
+<meta property="og:url" content="http://sihan.world/2017/03/28/js高程第三章/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="第三章基本法语法1.变量函数名以及操作符，都区分大小写。2.标识符必须以字母、下划线或$开始。3.严格模式，’’use strict’’可以用于在函数声明内部或者文件顶部。 数据类型1.有六种:null,undefined,boolean,number,string,object。2.typeof可以返回undefined\boolean\string\number\object\function">
+<meta property="og:locale" content="en-US">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS高程第三章：基本法">
+<meta name="twitter:description" content="第三章基本法语法1.变量函数名以及操作符，都区分大小写。2.标识符必须以字母、下划线或$开始。3.严格模式，’’use strict’’可以用于在函数声明内部或者文件顶部。 数据类型1.有六种:null,undefined,boolean,number,string,object。2.typeof可以返回undefined\boolean\string\number\object\function">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>JS高程第三章：基本法</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/03/28/nodejs(0)/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/03/28/android(0)/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/js高程第三章/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/js高程第三章/&text=JS高程第三章：基本法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/js高程第三章/&is_video=false&description=JS高程第三章：基本法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=JS高程第三章：基本法&body=Check out this article: http://sihan.world/2017/03/28/js高程第三章/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/js高程第三章/&name=JS高程第三章：基本法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第三章基本法"><span class="toc-number">1.</span> <span class="toc-text">第三章基本法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#语法"><span class="toc-number">1.1.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型"><span class="toc-number">1.2.</span> <span class="toc-text">数据类型</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        JS高程第三章：基本法
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-03-28T08:53:40.000Z" itemprop="datePublished">2017-03-28</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Javascript/">Javascript</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="第三章基本法"><a href="#第三章基本法" class="headerlink" title="第三章基本法"></a>第三章基本法</h1><h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>1.变量函数名以及操作符，都区分大小写。<br>2.标识符必须以字母、下划线或$开始。<br>3.严格模式，’’use strict’’可以用于在函数声明内部或者文件顶部。</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>1.有六种:null,undefined,boolean,number,string,object。<br>2.typeof可以返回undefined\boolean\string\number\object\function，也是6种，但是少了null因为归类在了object里，因为null指向了空对象，多了一个function。<br>3.typeof可以typeof message 或者 typeof (message)。</p>
+<ul>
+<li><p>undefined: 未经声明的变量也是undefined</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var message;</span><br><span class="line">alert(typeof message);  //undefined</span><br><span class="line">alert(typeof age);      //undefined</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>null</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alert( null == undefined ) //true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>boolean:可以转换为true：任何非空字符、任何非零字符包括infinity、任何对象以及n/a。可以转换为false：空字符、0和Nan、null以及undefined。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var a = Boolean(msg);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>number</p>
+</li>
+</ul>
+<ol>
+<li>0.1 + 0.2 == 0.3 //false</li>
+<li>NaN表示一个本来要返回数值的数未返回数值，任何涉及NaN的操作都会返回NaN。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Number(null)</span><br><span class="line">0</span><br><span class="line">Number(undefined)</span><br><span class="line">NaN</span><br><span class="line">Number(&apos;123&apos;)</span><br><span class="line">123</span><br><span class="line">Number(&apos;123f&apos;)</span><br><span class="line">NaN</span><br><span class="line">Number(1.1)</span><br><span class="line">1.1</span><br><span class="line">Number(0xa)</span><br><span class="line">10</span><br><span class="line">Number(070)</span><br><span class="line">56</span><br><span class="line">Number(&apos;011&apos;)</span><br><span class="line">11</span><br><span class="line">parseInt(&apos;123a&apos;)</span><br><span class="line">123</span><br><span class="line">parseInt(&apos;&apos;)</span><br><span class="line">NaN</span><br><span class="line">parseFloat只解析十进制数</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>string：转换为字符串有两种方式<br>1.toString可以指定基数，默认是10<br>2.String可以正常调用toString，此外对null和undefined也滋瓷<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var age = 11;</span><br><span class="line">age.toString(2);</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- object：每个对象实例都有留个属性和方法：constructor、hasOwnProperty、isPrototypeOf、propertyIsEnumerable、toLocaleString、toString、valueOf。</span><br><span class="line">## 操作符 </span><br><span class="line">1.后置递增、减是在包含他们的语句被求值之后才执行的。 </span><br><span class="line">2.一元操作符将进行值转换，类似于Number()。</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>var s1 = ‘01’<br>var s2 = ‘z’<br>s1 = +s1 //1<br>s2 = +s2 //NaN<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">3.位操作符，求负数使用二进制补码，将二进制反码然后加一。 4.左移(&lt;&lt;)，右移(&gt;&gt;)，无符号右移(&gt;&gt;&gt;)。负数符号位为1，正数为0，因为无符号位由0替换，所以负数无符号右移之后变化非常大。</span><br></pre></td></tr></table></figure></p>
+<p>var ov = 2;       //10<br>var nv = ov &lt;&lt; 5; //1000000<br>var nv2 = nv &gt;&gt; 5;  //10<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5.逻辑与或非</span><br></pre></td></tr></table></figure></p>
+<p>!Infinity  //false<br>!NaN  //true<br>!’’  //true<br>//&amp;&amp; 如果第一操作数是对象，则返回第二个操作数，如果第二个操作数是对象，只有在第一个操作数求值结果true的情况下才会返回该对象，如果都是对象则返回第二个操作数，如果有一个是null返回null，是NaN返回NaN，是undefined返回undefined。<br>//|| 如果第一个操作数是对象，则返回第一个操作数，如果第一个求值结果为false则返回第二个，如果都是对象则返回第一个，如果都是null返回null，是NaN返回NaN，是undefined返回undefined。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6.加减乘除模（膜）</span><br></pre></td></tr></table></figure></p>
+<p><em><br>NaN </em> x = NaN<br>Infinity <em> 0 = NaN<br>Infinity </em> 非0 = +- Infinity<br>Infinity * Infinity = Infinity<br>/<br>NaN / x = NaN<br>Infinity / Infinity = NaN<br>0 / 0 = NaN<br>非0 / 0 = +-Infinity<br>Infinity / 非0 = Infinity<br>%<br>Infinity % x = NaN<br>x % 0 = NaN<br>Infinity % Infinity = NaN<br>x % Infinity = x<br>+<br>Inf + Inf = Inf<br>-Inf + -Inf = -Inf<br>Inf + -Inf = NaN<br>-<br>Inf - Inf = NaN<br>-Inf - -Inf = NaN<br>Inf - -Inf = Inf<br>-Inf - Inf = -Inf<br>-0 - -0 = +0<br>+0 + -0 = +0<br>+0 - -0 = -0<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">7.关系操作符 </span><br><span class="line">1.任何操作数与NaN进行比较结果都是false。 </span><br><span class="line">2.null == undefined //true </span><br><span class="line">3.NaN == NaN //false </span><br><span class="line">4.如果有一个数是NaN，则相等操作符返回false，不相等操作符返回true。 </span><br><span class="line">5.null === undefined //false </span><br><span class="line">6.NaN === NaN //false 8.语句</span><br></pre></td></tr></table></figure></p>
+<p>for(var i = 0; i &lt; 10; i++){<br>    alert(i);<br>}<br>等价于<br>var i;<br>for(i = 0; i &lt; 10; i++){<br>    alert(i);<br>}<br>因此可以在外部访问到i<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">9.label</span><br></pre></td></tr></table></figure></p>
+<p>var num = 0;<br>start:<br>for(var i = 0; i &lt; 10; i++){<br>    for(var j = 0; j &lt; 10; i++){<br>        if(i ==5 &amp;&amp; j==5){<br>            continue start;<br>    }<br>    num++;<br>  }<br>}<br>alert(num);<br><code>`</code><br>10.参数和重载<br>1.参数是以数组的形式储存，没有重载，不过可以模仿方法的重载。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第三章基本法"><span class="toc-number">1.</span> <span class="toc-text">第三章基本法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#语法"><span class="toc-number">1.1.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型"><span class="toc-number">1.2.</span> <span class="toc-text">数据类型</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/js高程第三章/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/js高程第三章/&text=JS高程第三章：基本法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/js高程第三章/&is_video=false&description=JS高程第三章：基本法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=JS高程第三章：基本法&body=Check out this article: http://sihan.world/2017/03/28/js高程第三章/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/js高程第三章/&title=JS高程第三章：基本法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/js高程第三章/&name=JS高程第三章：基本法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

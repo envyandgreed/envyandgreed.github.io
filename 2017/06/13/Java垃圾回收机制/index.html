@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="1960年MIT实验室中诞生的Lisp已经是一门使用内存动态分配和垃圾收集技术的语言。在那个时期GC需要思考的事情有三个：  哪些内存需要回收？ 什么时候回收？ 如何回收？  判断是否可以回收Java内存区域中，程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭；栈中的栈帧随着方法的进出而出栈入栈。每个栈帧中分配多少内存基本是在类结构确定时就已知的。因此这几个区域的内存分配和回收都具有">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java垃圾回收机制">
+<meta property="og:url" content="http://sihan.world/2017/06/13/Java垃圾回收机制/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="1960年MIT实验室中诞生的Lisp已经是一门使用内存动态分配和垃圾收集技术的语言。在那个时期GC需要思考的事情有三个：  哪些内存需要回收？ 什么时候回收？ 如何回收？  判断是否可以回收Java内存区域中，程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭；栈中的栈帧随着方法的进出而出栈入栈。每个栈帧中分配多少内存基本是在类结构确定时就已知的。因此这几个区域的内存分配和回收都具有">
+<meta property="og:locale" content="en-US">
+<meta property="og:updated_time" content="2018-01-09T02:32:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java垃圾回收机制">
+<meta name="twitter:description" content="1960年MIT实验室中诞生的Lisp已经是一门使用内存动态分配和垃圾收集技术的语言。在那个时期GC需要思考的事情有三个：  哪些内存需要回收？ 什么时候回收？ 如何回收？  判断是否可以回收Java内存区域中，程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭；栈中的栈帧随着方法的进出而出栈入栈。每个栈帧中分配多少内存基本是在类结构确定时就已知的。因此这几个区域的内存分配和回收都具有">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java垃圾回收机制</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/06/14/Java的类/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/06/12/JVM（一）内存区域分析/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/13/Java垃圾回收机制/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&text=Java垃圾回收机制"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&is_video=false&description=Java垃圾回收机制"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java垃圾回收机制&body=Check out this article: http://sihan.world/2017/06/13/Java垃圾回收机制/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&name=Java垃圾回收机制&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#判断是否可以回收"><span class="toc-number">1.</span> <span class="toc-text">判断是否可以回收</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#回收方法区"><span class="toc-number">1.1.</span> <span class="toc-text">回收方法区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集算法"><span class="toc-number">2.</span> <span class="toc-text">垃圾收集算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记-清除算法"><span class="toc-number">2.1.</span> <span class="toc-text">标记-清除算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制算法"><span class="toc-number">2.2.</span> <span class="toc-text">复制算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标记-整理算法"><span class="toc-number">2.3.</span> <span class="toc-text">标记-整理算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分代收集"><span class="toc-number">2.4.</span> <span class="toc-text">分代收集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全点和安全数据"><span class="toc-number">3.</span> <span class="toc-text">安全点和安全数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安全点"><span class="toc-number">3.1.</span> <span class="toc-text">安全点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全区域"><span class="toc-number">3.2.</span> <span class="toc-text">安全区域</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器"><span class="toc-number">4.</span> <span class="toc-text">垃圾收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial收集器"><span class="toc-number">4.1.</span> <span class="toc-text">Serial收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew收集器"><span class="toc-number">4.2.</span> <span class="toc-text">ParNew收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Scavenge收集器"><span class="toc-number">4.3.</span> <span class="toc-text">Parallel Scavenge收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial-Old收集器"><span class="toc-number">4.4.</span> <span class="toc-text">Serial Old收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Old收集器"><span class="toc-number">4.5.</span> <span class="toc-text">Parallel Old收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS收集器"><span class="toc-number">4.6.</span> <span class="toc-text">CMS收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1收集器"><span class="toc-number">4.7.</span> <span class="toc-text">G1收集器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存分配与回收策略"><span class="toc-number">5.</span> <span class="toc-text">内存分配与回收策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对象优先在新生代的Eden区中分配"><span class="toc-number">5.1.</span> <span class="toc-text">对象优先在新生代的Eden区中分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大对象直接进入老年代"><span class="toc-number">5.2.</span> <span class="toc-text">大对象直接进入老年代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长期存活的对象进入老年代"><span class="toc-number">5.3.</span> <span class="toc-text">长期存活的对象进入老年代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态对象年龄判断"><span class="toc-number">5.4.</span> <span class="toc-text">动态对象年龄判断</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java垃圾回收机制
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-06-13T13:24:53.000Z" itemprop="datePublished">2017-06-13</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/JVM/">JVM</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>1960年MIT实验室中诞生的Lisp已经是一门使用内存动态分配和垃圾收集技术的语言。在那个时期GC需要思考的事情有三个：</p>
+<ul>
+<li>哪些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>如何回收？</li>
+</ul>
+<h2 id="判断是否可以回收"><a href="#判断是否可以回收" class="headerlink" title="判断是否可以回收"></a>判断是否可以回收</h2><p>Java内存区域中，程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭；栈中的栈帧随着方法的进出而出栈入栈。每个栈帧中分配多少内存基本是在类结构确定时就已知的。因此这几个区域的内存分配和回收都具有确定性。因为方法结束或者线程结束时，内存自然就跟着回收了。而Java堆和方法区则不同，只有运行时才知道会创建哪些对象，垃圾收集器所关注的是这部分内存。</p>
+<p>垃圾收集器在对堆进行回收前，首先当然是要确定哪些对象可以被回收，即已经“死了”，不可能再被使用到了。这种问题有两种算法：</p>
+<ul>
+<li>引用计数算法</li>
+</ul>
+<p>给对象添加一个引用计数器，每当有一个地方引用它时，计数器值就加一；当引用失效时，计数器值就减一。计数器值为零的对象就是不可能再被使用的。这种算法实现简单，判定效率高，但是无法解决对象之间循环引用的问题，比如下面这段代码，两者互相引用，但是及时以后不再访问它们，仍然不能被回收：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">objA.instance = objB;</span><br><span class="line">objB.instance = objA;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>可达性分析算法</li>
+</ul>
+<p>这个算法的基本思路就是通过一系列的成为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径成为引用链，当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。</p>
+<p><strong>可作为GC Roots的对象包括下面几种：</strong></p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI（即一般说的Native方法）引用的对象</li>
+</ul>
+<p>两种算法都与引用有关，那么Java中什么是引用呢？</p>
+<p>在JDK1.2之前引用的定义很传统，如果reference类型的数据中存储的数值代表的是另外一块内存的起始地址，就称这块内存代表着一个引用。这样的话，对象就只有被引用或者没有被引用两种状态，对于一些食之无味弃之可惜的对象显得无能为力。我们希望能够描述这样一类对象：当内存空间足够时，能保留在内存中；如果内存空间在进行垃圾回收后还是非常紧张，就抛弃这些对象。很多系统的缓存功能都符合这样的场景。</p>
+<p>JDK1.2之后Java的引用被分为强引用、软引用、弱引用、虚引用4种。这4种引用强度依次逐渐减弱。</p>
+<ul>
+<li>强引用指类似”Object obj=new Object()”这类的引用，只要强引用还存在，垃圾回收器永远不会回收掉被引用的对象。</li>
+<li>软引用用来描述一些还有用但并非必须的对象。在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围中进行第二次回收。用SoftReference类实现。</li>
+<li>弱引用也描述非必需对象，只能存活到下一次垃圾回收之前。用WeakReference类实现。</li>
+<li>虚引用也被称为幽灵引用，为一个对象设置虚引用的唯一目的就是能在这个对象被垃圾回收时收到一个系统通知。用PhantomReference类实现。</li>
+</ul>
+<p>即便在可达性分析算法中不可达的对象，也并不是必须被回收的：如果这个对象不可达，就会被第一次标记并且进行筛选，筛选的条件是此对象是否有必要执行finailize()方法。如果对象没有覆盖finailize()方法或者这个方法已经被虚拟机调用过，就没有必要执行。如果有必要执行，这个对象会被放置在F-Queue队列之中，由一个虚拟机自动建立的、低优先级的Finalizer线程去执行它。如果finalize()方法中它重新与引用链关联，就摆脱了被回收的命运。（比如重写函数中的finalize方法，在finalize方法中写 Class.value=this) 需要注意的是，自救的机会只有一次，因为一个对象的finailize方法只会被系统自动调用一次。</p>
+<h3 id="回收方法区"><a href="#回收方法区" class="headerlink" title="回收方法区"></a>回收方法区</h3><p>主要回收废弃常量和无用的类。</p>
+<p>废弃常量的判断条件：</p>
+<p>比如没有一个String对象引用常量池的”abc”，也没有其他地方引用，那”abc”就会被清理出常量池。</p>
+<p>对无用类的判断条件：</p>
+<ul>
+<li>该类的所有实例已经被回收；</li>
+<li>加载该类的ClassLoader已经被回收；</li>
+<li>该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</li>
+</ul>
+<h2 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h2><h3 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h3><p>首先标记出所有需要回收的对象，在标记完成之后统一回收所有比标记的对象。</p>
+<p>不足：第一是效率问题，标记和清除两个过程的效率都不高；另一个是空间问题，标记清除之后会产生大量不连续的内存碎片。</p>
+<h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h3><p>把内存分为大小相等的两块，每次只用其中一块。当这一块的用完了，就把还存活的对象复制到另一块，然后再把已经用过的内存空间一次清理掉。实际虚拟机的比例并不一定是一比一，HotSpot的就是八比一。当一个空间不够时，需要依赖其他内存（老年代）进行分配担保。</p>
+<h3 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h3><p>与标记清除类似，但是不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</p>
+<h3 id="分代收集"><a href="#分代收集" class="headerlink" title="分代收集"></a>分代收集</h3><p>根据对象存活周期的不同将内存划分为几块。一般是把Java堆分为新生代和老年代，这样就可以根据各个年代的特点采用最适当的收集算法。在新生代中，每次垃圾收集时都有大批对象死去，只有少量存活，那就使用复制算法，只需要付出少量存活对象的复制成本就可以完成收集。老年代中存活率高，使用标记清理或者标记整理算法来回收。</p>
+<h2 id="安全点和安全数据"><a href="#安全点和安全数据" class="headerlink" title="安全点和安全数据"></a>安全点和安全数据</h2><h3 id="安全点"><a href="#安全点" class="headerlink" title="安全点"></a>安全点</h3><p>有了垃圾回收的方法，那么我们应该什么时候执行垃圾回收呢？选定的标准是以“是否具有让程序长时间执行的特征”为标准进行选定的。长时间并不是指指令流长度，而是指令序列的复用，例如方法调用、循环跳转、异常跳转等。到达安全点后执行中断，中断方式有两种：</p>
+<ul>
+<li>抢先式中断：在GC发生时首先把所有线程全部中断，如果发现有线程中断的地方不在安全点上就恢复线程让他跑到安全点上。（现在几乎不用）。</li>
+<li>主动式中断：在GC需要中断线程时，设置一个标志，各个线程执行时主动轮询，发现中断标志时就中断挂起。轮询标志的地方和安全点重合，另外再加上创建对象需要分配内存的地方。</li>
+</ul>
+<h3 id="安全区域"><a href="#安全区域" class="headerlink" title="安全区域"></a>安全区域</h3><p>安全点可能遇到的问题： 线程处于Sleep或者Blocked状态，这时候线程无法响应JVM的中断请求，“走”到安全点去中断挂起，JVM也不太可能等到线程重新被分配CPU。</p>
+<p>这种情况就需要安全区域来解决。</p>
+<p>安全区域是指在一段代码片段中，引用关系不会发生变化。在这个区域的任何地方开始GC都是安全的。可以把它看做是拓展的安全点。线程执行到安全区域的代码时，标志自己进入了安全区域，当JVM发起GC时就不用管这些线程了。线程离开安全区域时，要检查是否完成了根节点枚举（或是整个GC过程),如果完成就继续执行，否则就等待。</p>
+<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><h3 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h3><p>新生代收集器，复制算法，单线程，只会使用一个CPU或者一条收集线程去完成垃圾收集工作。在它进行收集时，必须暂停其他所有的工作线程，直到收集结束。</p>
+<h3 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h3><p>Serial的多线程版本，使用多条线程进行垃圾收集。</p>
+<h3 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h3><p>与ParNew一样，新生代收集器，多线程，复制算法。但是它与其它收集器的关注点不同，其他的关注点是尽可能缩短垃圾收集时用户线程的停顿时间，而它的目标则是达到一个可控制的吞吐量（吞吐量=运行用户代码时间／（运行用户代码时间+垃圾收集时间））。有两个参数：</p>
+<ul>
+<li>MaxGCPauseMillis内存回收花费时间</li>
+<li>GCTimeRatio垃圾收集时间占总时间比</li>
+</ul>
+<h3 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h3><p>老年代，单线程，标记-整理算法。</p>
+<h3 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h3><p>Parallel Scavenge的老年代版本。使用多线程和标记-整理算法。</p>
+<h3 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h3><p>一款以追求最短回收停顿时间的收集器，响应快速，用于服务端。运行过程分为四步：</p>
+<p>其中初始标记和重新标记还终止其他所有线程。</p>
+<ul>
+<li>初始标记：标记GC Roots能直接关联到的对象。</li>
+<li>并发标记：进行GC Roots Tracing(形成链路)。</li>
+<li>重新标记：修改并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段停顿时间一般比初始标记长，但远比并发标记时间短。</li>
+<li>并发清除</li>
+</ul>
+<p>优点：并发收集、低停顿。</p>
+<p>缺点：对CPU资源敏感、无法处理浮动垃圾（就是在标记之后产生的新垃圾）、标记-清除算法的碎片过多</p>
+<h3 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h3><p>面向服务端，将取代CMS的最新收集器。</p>
+<p>优点：并行与并发、分代收集、空间整合、可预测的停顿。</p>
+<p>运行过程与CMS很像：</p>
+<ul>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>最终标记</li>
+<li>筛选回收</li>
+</ul>
+<h2 id="内存分配与回收策略"><a href="#内存分配与回收策略" class="headerlink" title="内存分配与回收策略"></a>内存分配与回收策略</h2><h3 id="对象优先在新生代的Eden区中分配"><a href="#对象优先在新生代的Eden区中分配" class="headerlink" title="对象优先在新生代的Eden区中分配"></a>对象优先在新生代的Eden区中分配</h3><p>新生代有两个Survivor区，当Eden区没有足够空间的时候，发生一次Minor GC。</p>
+<p>新生代GC（Minor GC)：指发生在新生代的垃圾收集动作，因为Java对象大多朝生夕灭，所以MInor GC非常频繁，速度也快。</p>
+<p>老年代GC（Major/Full GC）：指发生在老年代的GC。速度会比Minor GC慢10倍以上。</p>
+<h3 id="大对象直接进入老年代"><a href="#大对象直接进入老年代" class="headerlink" title="大对象直接进入老年代"></a>大对象直接进入老年代</h3><p>指特别大的字符串或者数组。</p>
+<h3 id="长期存活的对象进入老年代"><a href="#长期存活的对象进入老年代" class="headerlink" title="长期存活的对象进入老年代"></a>长期存活的对象进入老年代</h3><p>虚拟机给每个对象定义了一个对象年龄计数器。如果对象在Eden出生并经过第一次MinorGC后仍然存活，并且能够被Survivor容纳的话，将被移动到Survivor空间中，对象年龄设为1。对象在Survivor中每熬过一次MinorGC，年龄就增加1，到达一定程度（默认15岁）就被晋升到老年代中。</p>
+<h3 id="动态对象年龄判断"><a href="#动态对象年龄判断" class="headerlink" title="动态对象年龄判断"></a>动态对象年龄判断</h3><p>如果在Survivor空间中相同年龄所有对象大小的总和大小大于Survivor空间的一般，年龄大于或等于该年龄的对象直接进入老年代。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#判断是否可以回收"><span class="toc-number">1.</span> <span class="toc-text">判断是否可以回收</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#回收方法区"><span class="toc-number">1.1.</span> <span class="toc-text">回收方法区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集算法"><span class="toc-number">2.</span> <span class="toc-text">垃圾收集算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记-清除算法"><span class="toc-number">2.1.</span> <span class="toc-text">标记-清除算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制算法"><span class="toc-number">2.2.</span> <span class="toc-text">复制算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标记-整理算法"><span class="toc-number">2.3.</span> <span class="toc-text">标记-整理算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分代收集"><span class="toc-number">2.4.</span> <span class="toc-text">分代收集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全点和安全数据"><span class="toc-number">3.</span> <span class="toc-text">安全点和安全数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安全点"><span class="toc-number">3.1.</span> <span class="toc-text">安全点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全区域"><span class="toc-number">3.2.</span> <span class="toc-text">安全区域</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器"><span class="toc-number">4.</span> <span class="toc-text">垃圾收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial收集器"><span class="toc-number">4.1.</span> <span class="toc-text">Serial收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew收集器"><span class="toc-number">4.2.</span> <span class="toc-text">ParNew收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Scavenge收集器"><span class="toc-number">4.3.</span> <span class="toc-text">Parallel Scavenge收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial-Old收集器"><span class="toc-number">4.4.</span> <span class="toc-text">Serial Old收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Old收集器"><span class="toc-number">4.5.</span> <span class="toc-text">Parallel Old收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS收集器"><span class="toc-number">4.6.</span> <span class="toc-text">CMS收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1收集器"><span class="toc-number">4.7.</span> <span class="toc-text">G1收集器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存分配与回收策略"><span class="toc-number">5.</span> <span class="toc-text">内存分配与回收策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对象优先在新生代的Eden区中分配"><span class="toc-number">5.1.</span> <span class="toc-text">对象优先在新生代的Eden区中分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大对象直接进入老年代"><span class="toc-number">5.2.</span> <span class="toc-text">大对象直接进入老年代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长期存活的对象进入老年代"><span class="toc-number">5.3.</span> <span class="toc-text">长期存活的对象进入老年代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态对象年龄判断"><span class="toc-number">5.4.</span> <span class="toc-text">动态对象年龄判断</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/13/Java垃圾回收机制/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&text=Java垃圾回收机制"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&is_video=false&description=Java垃圾回收机制"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java垃圾回收机制&body=Check out this article: http://sihan.world/2017/06/13/Java垃圾回收机制/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&title=Java垃圾回收机制"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/13/Java垃圾回收机制/&name=Java垃圾回收机制&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="基础知识二分法的时间复杂度是log2 n = O(log n)，经过几次除以2等于1的算法，一般都是log n级别的: 1234567891011int binarySearch(int arr[], int n, int target)&amp;#123;    int l = 0, r = n-1;    while( l &amp;lt;= r )&amp;#123;        int mid = l + (r">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="时间复杂度">
+<meta property="og:url" content="http://sihan.world/2017/06/17/关于时间复杂度/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="基础知识二分法的时间复杂度是log2 n = O(log n)，经过几次除以2等于1的算法，一般都是log n级别的: 1234567891011int binarySearch(int arr[], int n, int target)&amp;#123;    int l = 0, r = n-1;    while( l &amp;lt;= r )&amp;#123;        int mid = l + (r">
+<meta property="og:locale" content="en-US">
+<meta property="og:image" content="http://sihan.world/img/fuza1-1.jpeg">
+<meta property="og:image" content="http://sihan.world/img/fuza1-2.jpeg">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="时间复杂度">
+<meta name="twitter:description" content="基础知识二分法的时间复杂度是log2 n = O(log n)，经过几次除以2等于1的算法，一般都是log n级别的: 1234567891011int binarySearch(int arr[], int n, int target)&amp;#123;    int l = 0, r = n-1;    while( l &amp;lt;= r )&amp;#123;        int mid = l + (r">
+<meta name="twitter:image" content="http://sihan.world/img/fuza1-1.jpeg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>时间复杂度</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/06/19/数组问题的思路/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/06/14/Java的类/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/17/关于时间复杂度/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/17/关于时间复杂度/&text=时间复杂度"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/17/关于时间复杂度/&is_video=false&description=时间复杂度"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=时间复杂度&body=Check out this article: http://sihan.world/2017/06/17/关于时间复杂度/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/17/关于时间复杂度/&name=时间复杂度&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础知识"><span class="toc-number">1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递归算法的时间复杂度"><span class="toc-number">2.</span> <span class="toc-text">递归算法的时间复杂度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一次递归"><span class="toc-number">2.1.</span> <span class="toc-text">一次递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多次递归"><span class="toc-number">2.2.</span> <span class="toc-text">多次递归</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#均摊时间复杂度"><span class="toc-number">3.</span> <span class="toc-text">均摊时间复杂度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#避免复杂度的震荡"><span class="toc-number">3.1.</span> <span class="toc-text">避免复杂度的震荡</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        时间复杂度
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-06-17T14:08:23.000Z" itemprop="datePublished">2017-06-17</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>二分法的时间复杂度是log2 n = O(log n)，经过几次除以2等于1的算法，一般都是log n级别的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span> arr[], <span class="keyword">int</span> n, <span class="keyword">int</span> target)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> l = <span class="number">0</span>, r = n-<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>( l &lt;= r )&#123;</span><br><span class="line">        <span class="keyword">int</span> mid = l + (r-l)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>( arr[mid] == target ) <span class="keyword">return</span> mid;</span><br><span class="line">        <span class="keyword">if</span>( arr[mid] &gt; target ) r = mid - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> l = mid + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再来看另一组代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">string <span class="title">intToString</span><span class="params">( <span class="keyword">int</span> num )</span></span>&#123;</span><br><span class="line">    string s = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">while</span>( num )&#123;</span><br><span class="line">        s += <span class="string">'0'</span> + num%<span class="number">10</span>;</span><br><span class="line">        num /= <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    reverse(s);</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这组整型转字符串的函数，其实是n执行几次除以10的操作后等于0？所以时间复杂度就是log 10 n = O(log n)。其中reverse函数实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">reverse</span><span class="params">( string s )</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> n = s.length();</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n/<span class="number">2</span> ; i ++ )</span><br><span class="line">        swap( s[i] , s[n-<span class="number">1</span>-i] );</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然reverse的时间复杂度是O(n)，但是它的n是体现在s有多少位上，这个长度和while循环次数是一样的，所以这个函数整体还是log n级别的。</p>
+<p>上面两个函数虽然都是log级别的，但是底数不同，那么不同底数的log之间有什么关系呢？</p>
+<p>​                        log a N = log a b * log b N</p>
+<p>就是相差了一个常数级别。</p>
+<p>下一个：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> sz = <span class="number">1</span> ; sz &lt; n ; sz += sz )</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">1</span> ; i &lt; n ; i ++ )</span><br><span class="line">            cout&lt;&lt;<span class="string">"Hello, Algorithm!"</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然有嵌套for语句，但是叠加条件是相当n除以了几次2等于1，所以是O(logn)，所以整体是o(nlogn)。</p>
+<p>下一个判断素数的函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">bool <span class="title">isPrime</span><span class="params">( <span class="keyword">int</span> num )</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> x = <span class="number">2</span> ; x*x &lt;= num ; x ++ )</span><br><span class="line">        <span class="keyword">if</span>( num%x == <span class="number">0</span> )</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个相当于x从2开始走到了根号n，所以时间复杂度为O(sqrt(n))。</p>
+<h2 id="递归算法的时间复杂度"><a href="#递归算法的时间复杂度" class="headerlink" title="递归算法的时间复杂度"></a>递归算法的时间复杂度</h2><h3 id="一次递归"><a href="#一次递归" class="headerlink" title="一次递归"></a>一次递归</h3><p>如果递归函数中，只进行一次递归调用，递归深度为depth，在每个递归函数中，时间复杂度为T，则总体的时间复杂度为O(T*depth)。例如二分法。</p>
+<p>像这个函数，递归深度为n，每次为1，所以总体为n：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">( <span class="keyword">int</span> n )</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span>( n &gt;= <span class="number">0</span> );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( n == <span class="number">0</span> )</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> n + sum(n-<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面这个递归深度为logn，总体时间复杂度为O(logn):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">pow</span><span class="params">( <span class="keyword">double</span> x, <span class="keyword">int</span> n )</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span>( n &gt;= <span class="number">0</span> );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( n == <span class="number">0</span> )</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">double</span> t = pow(x, n/<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">if</span>( n%<span class="number">2</span> )</span><br><span class="line">        <span class="keyword">return</span> x*t*t;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> t*t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="多次递归"><a href="#多次递归" class="headerlink" title="多次递归"></a>多次递归</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span>( n &gt;= <span class="number">0</span> );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( n == <span class="number">0</span> )</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> f(n-<span class="number">1</span>) + f(n-<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 我们需要关注递归的调用次数，之前一次的时候深度=次数，现在不同了。那么我们可以画一颗递归树(f(3)):</p>
+<p><img src="/img/fuza1-1.jpeg" alt="fuza1-1"></p>
+<p>所以执行次数就是，2的n次方求和，最后结果为2^(n+1) - 1。所以时间复杂度为O(2^n)。</p>
+<p>但是像归并排序这种，他的时间复杂度就是O(nlogn)，因为它递归树的深度为logn而不是n：</p>
+<p><img src="/img/fuza1-2.jpeg" alt="fuza1-1"></p>
+<h2 id="均摊时间复杂度"><a href="#均摊时间复杂度" class="headerlink" title="均摊时间复杂度"></a>均摊时间复杂度</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push_back</span><span class="params">(T e)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(size == capacity)&#123;</span><br><span class="line">    resize(<span class="number">2</span>*capacity);</span><br><span class="line">  &#125;</span><br><span class="line">  data[size++] = e;</span><br><span class="line">&#125;</span><br><span class="line"> <span class="function"><span class="keyword">void</span> <span class="title">resize</span><span class="params">(<span class="keyword">int</span> newCapacity)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">assert</span>( newCapacity &gt;= size );</span><br><span class="line">        T *newData = <span class="keyword">new</span> T[newCapacity];</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; size ; i ++ )</span><br><span class="line">            newData[i] = data[i];</span><br><span class="line">        delete[] data;</span><br><span class="line"></span><br><span class="line">        data = newData;</span><br><span class="line">        capacity = newCapacity;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>如上面的函数，resize是将数组容积扩大两倍，他的复杂度为O(n)，但是pushback 的复杂度为O(1)，这是因为resize只在执行了n次之后才执行一次，而之前n次每次的复杂度为1，所以n+1次操作耗费了2n，所以每次都是常数级的。</p>
+<h3 id="避免复杂度的震荡"><a href="#避免复杂度的震荡" class="headerlink" title="避免复杂度的震荡"></a>避免复杂度的震荡</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">T <span class="title">pop_back</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">assert</span>( size &gt; <span class="number">0</span> );</span><br><span class="line">        T ret = data[size-<span class="number">1</span>];</span><br><span class="line">        size --;</span><br><span class="line">        <span class="keyword">if</span>( size == capacity/<span class="number">2</span> )</span><br><span class="line">            resize( capacity/<span class="number">2</span> );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码是当数组出现大面积空白时，将数组的长度变为1/2，和上面的时间复杂度一样，每次减少一个，只有在正好1/2处才执行一次resize操作，所以时间复杂度为O(1)，但是如果出现一种极端情况，在1/2处不断地增减，那么时间复杂度就变成了O(n)了，这就是复杂度的震荡，为乐避免这种情况，需要将判定条件从1/2变成1/4。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础知识"><span class="toc-number">1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递归算法的时间复杂度"><span class="toc-number">2.</span> <span class="toc-text">递归算法的时间复杂度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一次递归"><span class="toc-number">2.1.</span> <span class="toc-text">一次递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多次递归"><span class="toc-number">2.2.</span> <span class="toc-text">多次递归</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#均摊时间复杂度"><span class="toc-number">3.</span> <span class="toc-text">均摊时间复杂度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#避免复杂度的震荡"><span class="toc-number">3.1.</span> <span class="toc-text">避免复杂度的震荡</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/06/17/关于时间复杂度/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/06/17/关于时间复杂度/&text=时间复杂度"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/06/17/关于时间复杂度/&is_video=false&description=时间复杂度"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=时间复杂度&body=Check out this article: http://sihan.world/2017/06/17/关于时间复杂度/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/06/17/关于时间复杂度/&title=时间复杂度"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/06/17/关于时间复杂度/&name=时间复杂度&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

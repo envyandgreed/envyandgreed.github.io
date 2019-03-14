@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Javascritpt高级程序设计第三版，p69-71详细介绍了，两种类型传递以及函数参数传递的原理。书中提到， js中所有函数的参数都是按值传递的  也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。而变量的传递有按值和按引用两种，但参数只能按值传递。想给参数传递基本类型就是把值复制给参数。但是传递引用类型的值时，会把这个值在内存中的地址复制给一个局部变量，因">
+<meta name="keywords" content="Javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript中按值传递&amp;按引用传递从看懂到看开">
+<meta property="og:url" content="http://sihan.world/2017/03/28/js中的引用传递和按值传递/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="Javascritpt高级程序设计第三版，p69-71详细介绍了，两种类型传递以及函数参数传递的原理。书中提到， js中所有函数的参数都是按值传递的  也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。而变量的传递有按值和按引用两种，但参数只能按值传递。想给参数传递基本类型就是把值复制给参数。但是传递引用类型的值时，会把这个值在内存中的地址复制给一个局部变量，因">
+<meta property="og:locale" content="en-US">
+<meta property="og:image" content="http://sihan.world/img/2-1.JPG">
+<meta property="og:updated_time" content="2018-01-09T02:32:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript中按值传递&amp;按引用传递从看懂到看开">
+<meta name="twitter:description" content="Javascritpt高级程序设计第三版，p69-71详细介绍了，两种类型传递以及函数参数传递的原理。书中提到， js中所有函数的参数都是按值传递的  也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。而变量的传递有按值和按引用两种，但参数只能按值传递。想给参数传递基本类型就是把值复制给参数。但是传递引用类型的值时，会把这个值在内存中的地址复制给一个局部变量，因">
+<meta name="twitter:image" content="http://sihan.world/img/2-1.JPG">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Javascript中按值传递&amp;按引用传递从看懂到看开</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/03/28/http的零碎知识/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/03/28/jQuery/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/js中的引用传递和按值传递/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&text=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&is_video=false&description=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Javascript中按值传递&amp;按引用传递从看懂到看开&body=Check out this article: http://sihan.world/2017/03/28/js中的引用传递和按值传递/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&name=Javascript中按值传递&amp;按引用传递从看懂到看开&description=&lt;p&gt;&lt;img src=&#34;/img/2-1.JPG&#34; alt=&#34;2-1&#34;&gt;&lt;br&gt;Javascritpt高级程序设计第三版，p69-71详细介绍了，两种类型传递以及函数参数传递的原理。书中提到， js中所有函数的参数都是按值传递的  也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。而变量的传递有按值和按引用两种，但参数只能按值传递。想给参数传递基本类型就是把值复制给参数。但是传递引用类型的值时，会把这个值在内存中的地址复制给一个局部变量，因此这个局部变量的变化会反映在函数的外部。&lt;br&gt;此外书中还给出了例子：&lt;br&gt;&lt;figure class=&#34;highlight bash&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; setName(obj) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  obj.name = &lt;span class=&#34;string&#34;&gt;&#34;Nicholas&#34;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  obj = new Object();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  obj.name = &lt;span class=&#34;string&#34;&gt;&#34;Greg&#34;&lt;/span&gt;;    &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;var person = new Object();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;setName(person);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;alert(person.name); // &lt;span class=&#34;string&#34;&gt;&#34;Nicholas&#34;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;作者认为如果person是按引用传递的，那么person就会自动被修改为指向其name属性值为”Greg”的新对象。但是，当接下来再访问person.name时，显示的值仍然是”Nicholas”。这说明即使在函数内部修改了参数的值，但原始的引用仍然保持不变。实际上，当在函数内部重写obj时，这个变量引用的就是一个局部对象了。而这个局部对象会在函数执行完毕后立即被销毁。&lt;br&gt;从这个例子作者认为，函数的参数传递是按值传递的。&lt;br&gt;但是他说的真的对吗？&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Javascript中按值传递&amp;按引用传递从看懂到看开
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-03-28T08:53:40.000Z" itemprop="datePublished">2017-03-28</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Javascript/">Javascript</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><img src="/img/2-1.JPG" alt="2-1"><br>Javascritpt高级程序设计第三版，p69-71详细介绍了，两种类型传递以及函数参数传递的原理。书中提到， js中所有函数的参数都是按值传递的  也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。而变量的传递有按值和按引用两种，但参数只能按值传递。想给参数传递基本类型就是把值复制给参数。但是传递引用类型的值时，会把这个值在内存中的地址复制给一个局部变量，因此这个局部变量的变化会反映在函数的外部。<br>此外书中还给出了例子：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> setName(obj) &#123;</span><br><span class="line">  obj.name = <span class="string">"Nicholas"</span>;</span><br><span class="line">  obj = new Object();</span><br><span class="line">  obj.name = <span class="string">"Greg"</span>;    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var person = new Object();</span><br><span class="line">setName(person);</span><br><span class="line">alert(person.name); // <span class="string">"Nicholas"</span></span><br></pre></td></tr></table></figure></p>
+<p>作者认为如果person是按引用传递的，那么person就会自动被修改为指向其name属性值为”Greg”的新对象。但是，当接下来再访问person.name时，显示的值仍然是”Nicholas”。这说明即使在函数内部修改了参数的值，但原始的引用仍然保持不变。实际上，当在函数内部重写obj时，这个变量引用的就是一个局部对象了。而这个局部对象会在函数执行完毕后立即被销毁。<br>从这个例子作者认为，函数的参数传递是按值传递的。<br>但是他说的真的对吗？<br><a id="more"></a><br>我们换一种写法，作者说“如果person是按引用传递的,那么person就会自动被修改为指向其name属性值为Greg的新对象”<br>那么我们现在按照引用传递：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var f1 = new Object();</span><br><span class="line">var f2 = f1;</span><br><span class="line">f2.name = <span class="string">"Nicholas"</span>;</span><br><span class="line">f2 = new Object();</span><br><span class="line">f2.name = <span class="string">"Greg"</span>;</span><br><span class="line">console.log(f1.name);  //Nicholas</span><br></pre></td></tr></table></figure></p>
+<p>这个例子中的f1不是按值传递的，但是f1.name没有改变，这和参数传递的情况是一样的，这里可以肯定的是：对象是按引用传递的。但是也符合作者按值传递的结论，所以这句“如果person是按引用传递的,那么person就会自动被修改为指向其name属性值为Greg的新对象”是错了。<br>但是这个参数到底是按照什么传递的呢？<br>其实这个问题的答案不在于按照所谓的什么传递，而是如何给参数分配变量和声明。<br>先看如下代码:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var object1 = &#123;&#125;;</span><br><span class="line">var object2 = &#123;&#125;;</span><br><span class="line">var favoriteObject = object1;</span><br><span class="line">favoriteObject = object2;</span><br><span class="line">object2.name = <span class="string">'Fred'</span>;</span><br><span class="line">console.log(favoriteObject.name) //  Fred</span><br><span class="line">favoriteObject.name = <span class="string">'Joe'</span>;</span><br><span class="line">console.log(object2.name); //  Joe</span><br></pre></td></tr></table></figure></p>
+<p>很好理解是吧，因为两者指向同一个位置，object2将自己的变动传递给了favoriteobject所以他们俩的改动是互相关联的。<br>这是对象的引用传递，那么基本类型呢：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var string1 = <span class="string">'Hello world'</span>;</span><br><span class="line">var string2 = <span class="string">'Goodbye world'</span>;</span><br><span class="line">var favoriteString = string1;</span><br><span class="line">favoriteString = <span class="string">'Hello everyone'</span>;</span><br><span class="line">console.log(favoriteString); // Logs <span class="string">'Hello everyone'</span></span><br><span class="line">console.log(string1); // Logs <span class="string">'Hello world'</span></span><br></pre></td></tr></table></figure></p>
+<p>这里的string因为是基本类型传递，所以不会被favoritestring的改变而牵着鼻子走，就是说两者是独立的，不会互相关联。<br>如果加入函数这一元素呢：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var myString = <span class="string">'hello'</span>;</span><br><span class="line">var param1 = myString;</span><br><span class="line">param1 = <span class="string">'world'</span>;</span><br><span class="line"></span><br><span class="line">console.log(myString); // logs <span class="string">'hello'</span></span><br><span class="line">console.log(param1);   // logs <span class="string">'world'</span></span><br></pre></td></tr></table></figure></p>
+<p>上面还是基本类型的传递，那么下面呢：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> myFunc(paraml)&#123;</span><br><span class="line">  paraml = <span class="string">"World"</span>;</span><br><span class="line">  console.log(paraml);</span><br><span class="line">&#125;</span><br><span class="line">var myString = <span class="string">'hello'</span></span><br><span class="line">myFunc(myString); // World</span><br><span class="line"></span><br><span class="line">console.log(myString); // logs <span class="string">'hello'</span></span><br></pre></td></tr></table></figure></p>
+<p>这里作为一名合格的字符串，他并没有让给我们失望，他按值传递，没有收到paraml的影响，保持了自己的hello值。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">var myObject = &#123;</span><br><span class="line">    firstName: <span class="string">'Joe'</span>,</span><br><span class="line">    lastName: <span class="string">'Smith'</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// Assign to a new variable (just like when you pass to a <span class="keyword">function</span>)</span><br><span class="line">var otherObj = myObject;</span><br><span class="line"></span><br><span class="line">// Let<span class="string">'s mutate our object</span></span><br><span class="line"><span class="string">otherObj.firstName = '</span>Sue<span class="string">'; // I guess Joe decided to be a girl</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">console.log(myObject.firstName); // Logs '</span>Sue<span class="string">'</span></span><br><span class="line"><span class="string">console.log(otherObj.firstName); // Logs '</span>Sue<span class="string">'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// Now, let'</span>s reassign</span><br><span class="line">otherObj = &#123;</span><br><span class="line">    firstName: <span class="string">'Jack'</span>,</span><br><span class="line">    lastName: <span class="string">'Frost'</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// Now, otherObj and myObject are assigned to 2 very different objects</span><br><span class="line">// And mutating one object no longer mutates the other</span><br><span class="line">console.log(myObject.firstName); // Logs <span class="string">'Sue'</span></span><br><span class="line">console.log(otherObj.firstName); // Logs <span class="string">'Jack'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码里对象按引用传递，一个变化另一收到牵连。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> myFunc(otherObj) &#123;</span><br><span class="line"></span><br><span class="line">    // Let<span class="string">'s mutate our object</span></span><br><span class="line"><span class="string">    otherObj.firstName = '</span>Sue<span class="string">';</span></span><br><span class="line"><span class="string">    console.log(otherObj.firstName); // Logs '</span>Sue<span class="string">'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    // Now let'</span>s re-assign</span><br><span class="line">    otherObj = &#123;</span><br><span class="line">        firstName: <span class="string">'Jack'</span>,</span><br><span class="line">        lastName: <span class="string">'Frost'</span></span><br><span class="line">    &#125;;</span><br><span class="line">    console.log(otherObj.firstName); // Logs <span class="string">'Jack'</span></span><br><span class="line"></span><br><span class="line">    // Again, otherObj and myObject are assigned to 2 very different objects</span><br><span class="line">    // And mutating one object no longer mutates the other</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var myObject = &#123;</span><br><span class="line">    firstName: <span class="string">'Joe'</span>,</span><br><span class="line">    lastName: <span class="string">'Smith'</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// Calls myFunc and assigns otherObj to myObject just like otherObj = myObject</span><br><span class="line">myFunc(myObject);</span><br><span class="line"></span><br><span class="line">console.log(myObject.firstName); // Logs <span class="string">'Sue'</span>, just like before</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子和书中给的类似，函数中的otherobj开始是和myobject指向同一个对象，所以，修改的时候是牵连的，但是一旦给otherobj重新声明了一个对象，那么两者就没有什么关系了。</p>
+<p>如果你已经一步一步地看到了这，我想你心中对参数传递这个概念已经有了自己的理解。上述的情况也就是函数和变量传递能涉及到的所有情况了。那么这么看来，其实并不需要解决参数到底是按照什么传递的，只需要知道，只要我们没有给两者声明新的对象，那么对其进行的修改都是牵连的，一旦声明了新的，两者就没有关系了，这里不理解的按值还是按引用传递的根本原因，一个是书中说错了一部分，另一个是应该用上述方法来解释，而不是引用传递。</p>
+<p>参考文献：</p>
+<ul>
+<li>《Javascript高级程序设计》</li>
+<li><a href="http://www.cnblogs.com/xljzlw/archive/2015/04/08/4399414.html" target="_blank" rel="noopener">关于js中一个对象当做参数传递是按值传递还是按引用传递的个人看法</a></li>
+<li><a href="http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language?lq=1#" target="_blank" rel="noopener">stackoverflow:Is JavaScript a pass-by-reference or pass-by-value language?</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/js中的引用传递和按值传递/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&text=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&is_video=false&description=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Javascript中按值传递&amp;按引用传递从看懂到看开&body=Check out this article: http://sihan.world/2017/03/28/js中的引用传递和按值传递/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&title=Javascript中按值传递&amp;按引用传递从看懂到看开"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/js中的引用传递和按值传递/&name=Javascript中按值传递&amp;按引用传递从看懂到看开&description=&lt;p&gt;&lt;img src=&#34;/img/2-1.JPG&#34; alt=&#34;2-1&#34;&gt;&lt;br&gt;Javascritpt高级程序设计第三版，p69-71详细介绍了，两种类型传递以及函数参数传递的原理。书中提到， js中所有函数的参数都是按值传递的  也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。而变量的传递有按值和按引用两种，但参数只能按值传递。想给参数传递基本类型就是把值复制给参数。但是传递引用类型的值时，会把这个值在内存中的地址复制给一个局部变量，因此这个局部变量的变化会反映在函数的外部。&lt;br&gt;此外书中还给出了例子：&lt;br&gt;&lt;figure class=&#34;highlight bash&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; setName(obj) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  obj.name = &lt;span class=&#34;string&#34;&gt;&#34;Nicholas&#34;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  obj = new Object();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  obj.name = &lt;span class=&#34;string&#34;&gt;&#34;Greg&#34;&lt;/span&gt;;    &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;var person = new Object();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;setName(person);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;alert(person.name); // &lt;span class=&#34;string&#34;&gt;&#34;Nicholas&#34;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;作者认为如果person是按引用传递的，那么person就会自动被修改为指向其name属性值为”Greg”的新对象。但是，当接下来再访问person.name时，显示的值仍然是”Nicholas”。这说明即使在函数内部修改了参数的值，但原始的引用仍然保持不变。实际上，当在函数内部重写obj时，这个变量引用的就是一个局部对象了。而这个局部对象会在函数执行完毕后立即被销毁。&lt;br&gt;从这个例子作者认为，函数的参数传递是按值传递的。&lt;br&gt;但是他说的真的对吗？&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="从这篇文章开始我将学习Nodejs的相关内容，除此之外还将涉及到函数式编程、RESTful APL设计，MongoDB与Redis的使用，以及实时通讯技术。 Nodejs基础modules这里我们使用git bash和vim来运行一段小程序1234567891011//a.jsexports.foo = &apos;foo&apos;exports.show = function()&amp;#123;        con">
+<meta name="keywords" content="Node.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RE：从零开始的Node.js生活(0)">
+<meta property="og:url" content="http://sihan.world/2017/03/28/nodejs(0)/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="从这篇文章开始我将学习Nodejs的相关内容，除此之外还将涉及到函数式编程、RESTful APL设计，MongoDB与Redis的使用，以及实时通讯技术。 Nodejs基础modules这里我们使用git bash和vim来运行一段小程序1234567891011//a.jsexports.foo = &apos;foo&apos;exports.show = function()&amp;#123;        con">
+<meta property="og:locale" content="en-US">
+<meta property="og:image" content="http://sihan.world/img/6-1.png">
+<meta property="og:updated_time" content="2018-01-09T02:32:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RE：从零开始的Node.js生活(0)">
+<meta name="twitter:description" content="从这篇文章开始我将学习Nodejs的相关内容，除此之外还将涉及到函数式编程、RESTful APL设计，MongoDB与Redis的使用，以及实时通讯技术。 Nodejs基础modules这里我们使用git bash和vim来运行一段小程序1234567891011//a.jsexports.foo = &apos;foo&apos;exports.show = function()&amp;#123;        con">
+<meta name="twitter:image" content="http://sihan.world/img/6-1.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>RE：从零开始的Node.js生活(0)</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/03/28/hexo搭建/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/03/28/js高程第三章/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/nodejs(0)/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/nodejs(0)/&text=RE：从零开始的Node.js生活(0)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/nodejs(0)/&is_video=false&description=RE：从零开始的Node.js生活(0)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RE：从零开始的Node.js生活(0)&body=Check out this article: http://sihan.world/2017/03/28/nodejs(0)/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/nodejs(0)/&name=RE：从零开始的Node.js生活(0)&description=&lt;p&gt;&lt;img src=&#34;/img/6-1.png&#34; alt=&#34;6-1&#34;&gt;&lt;br&gt;从这篇文章开始我将学习Nodejs的相关内容，除此之外还将涉及到函数式编程、RESTful APL设计，MongoDB与Redis的使用，以及实时通讯技术。&lt;/p&gt;
+&lt;h3 id=&#34;Nodejs基础&#34;&gt;&lt;a href=&#34;#Nodejs基础&#34; class=&#34;headerlink&#34; title=&#34;Nodejs基础&#34;&gt;&lt;/a&gt;Nodejs基础&lt;/h3&gt;&lt;h4 id=&#34;modules&#34;&gt;&lt;a href=&#34;#modules&#34; class=&#34;headerlink&#34; title=&#34;modules&#34;&gt;&lt;/a&gt;modules&lt;/h4&gt;&lt;p&gt;这里我们使用git bash和vim来运行一段小程序&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//a.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.foo = &lt;span class=&#34;string&#34;&gt;&#39;foo&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.show = &lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(exports.foo)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//b.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; a = &lt;span class=&#34;built_in&#34;&gt;require&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&#39;./a&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(a.foo) &lt;span class=&#34;comment&#34;&gt;// -&amp;gt; foo&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;a.show() &lt;span class=&#34;comment&#34;&gt;// -&amp;gt; foo&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(&lt;span class=&#34;built_in&#34;&gt;module&lt;/span&gt;.exports == exports &lt;span class=&#34;comment&#34;&gt;// true&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;从上述例子中可以看出Nodejs中exports和require这两个基本函数是如何工作的。这其实是CMD的规范，为了更加熟悉这种格式的调用，我们再看一组代码：&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;34&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//student.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;funciton add(student)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(&lt;span class=&#34;string&#34;&gt;&#39;add student &#39;&lt;/span&gt; + student )&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.add = add&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//其实和那种模块的写法作用上是一样的，不过如果两者同时存在，会被模块的写法覆盖掉。如果你想让你的模块成为一个特别的模块类型，那么就使用module，如果想让你的模块成为一个模块实例，那么就使用exports。&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//teacher.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;add&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;teacher&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(&lt;span class=&#34;string&#34;&gt;&#39;add teacher &#39;&lt;/span&gt; + teacher)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.add = add&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//klass.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; student = &lt;span class=&#34;built_in&#34;&gt;require&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&#39;./student&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; teacher = &lt;span class=&#34;built_in&#34;&gt;require&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&#39;./teacher&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;add&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;teacherName,students&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	teacher.add(teacherName)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	students.forEach(&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;item,index&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;		student.add(item)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &amp;#125;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.add = add&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//index.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; klass = &lt;span class=&#34;built_in&#34;&gt;require&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&#39;./klass&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;klass.add(&lt;span class=&#34;string&#34;&gt;&#39;scott&#39;&lt;/span&gt;,[&lt;span class=&#34;string&#34;&gt;&#39;envy&#39;&lt;/span&gt;,&lt;span class=&#34;string&#34;&gt;&#39;greed&#39;&lt;/span&gt;])&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;--------------------&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;$ node index&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;add teacher scott&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;add student envy&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;add student greed&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nodejs基础"><span class="toc-number">1.</span> <span class="toc-text">Nodejs基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#modules"><span class="toc-number">1.1.</span> <span class="toc-text">modules</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#module-wrap"><span class="toc-number">1.2.</span> <span class="toc-text">module wrap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#module-object"><span class="toc-number">1.3.</span> <span class="toc-text">module object</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#require搜索"><span class="toc-number">1.4.</span> <span class="toc-text">require搜索</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        RE：从零开始的Node.js生活(0)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-03-28T08:53:40.000Z" itemprop="datePublished">2017-03-28</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Node-js/">Node.js</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><img src="/img/6-1.png" alt="6-1"><br>从这篇文章开始我将学习Nodejs的相关内容，除此之外还将涉及到函数式编程、RESTful APL设计，MongoDB与Redis的使用，以及实时通讯技术。</p>
+<h3 id="Nodejs基础"><a href="#Nodejs基础" class="headerlink" title="Nodejs基础"></a>Nodejs基础</h3><h4 id="modules"><a href="#modules" class="headerlink" title="modules"></a>modules</h4><p>这里我们使用git bash和vim来运行一段小程序<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//a.js</span></span><br><span class="line">exports.foo = <span class="string">'foo'</span></span><br><span class="line">exports.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(exports.foo)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//b.js</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">'./a'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(a.foo) <span class="comment">// -&gt; foo</span></span><br><span class="line">a.show() <span class="comment">// -&gt; foo</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">module</span>.exports == exports <span class="comment">// true</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>从上述例子中可以看出Nodejs中exports和require这两个基本函数是如何工作的。这其实是CMD的规范，为了更加熟悉这种格式的调用，我们再看一组代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//student.js</span></span><br><span class="line">funciton add(student)&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'add student '</span> + student )</span><br><span class="line">&#125;</span><br><span class="line">exports.add = add</span><br><span class="line"><span class="comment">//其实和那种模块的写法作用上是一样的，不过如果两者同时存在，会被模块的写法覆盖掉。如果你想让你的模块成为一个特别的模块类型，那么就使用module，如果想让你的模块成为一个模块实例，那么就使用exports。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//teacher.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">teacher</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'add teacher '</span> + teacher)</span><br><span class="line">&#125;</span><br><span class="line">exports.add = add</span><br><span class="line"><span class="comment">//klass.js</span></span><br><span class="line"><span class="keyword">var</span> student = <span class="built_in">require</span>(<span class="string">'./student'</span>)</span><br><span class="line"><span class="keyword">var</span> teacher = <span class="built_in">require</span>(<span class="string">'./teacher'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">teacherName,students</span>)</span>&#123;</span><br><span class="line">	teacher.add(teacherName)</span><br><span class="line">	students.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item,index</span>)</span>&#123;</span><br><span class="line">		student.add(item)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">exports.add = add</span><br><span class="line"></span><br><span class="line"><span class="comment">//index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> klass = <span class="built_in">require</span>(<span class="string">'./klass'</span>)</span><br><span class="line">klass.add(<span class="string">'scott'</span>,[<span class="string">'envy'</span>,<span class="string">'greed'</span>])</span><br><span class="line"></span><br><span class="line">--------------------</span><br><span class="line">$ node index</span><br><span class="line">add teacher scott</span><br><span class="line">add student envy</span><br><span class="line">add student greed</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<h4 id="module-wrap"><a href="#module-wrap" class="headerlink" title="module wrap"></a>module wrap</h4><p>而这些基本的函数，都是通过闭包的形式，通过参数来传入并执行代码的。使用闭包的好处是，可以保证顶层的var，let，const定义的是文件级别的变量，这样在浏览器导入多个js文件的时候，就不会导致变量冲突。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">exports,require,module,__filename,__dirname</span>)</span>&#123;</span><br><span class="line">		<span class="comment">//your code</span></span><br><span class="line">		<span class="keyword">var</span> a  = <span class="built_in">require</span>(<span class="string">'./a'</span>)</span><br><span class="line">		exports.bar = <span class="string">'foo'</span></span><br><span class="line">		a.show()</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//__filename是当前完整路径</span></span><br><span class="line"><span class="comment">//__dirname当前文件夹路径</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="module-object"><a href="#module-object" class="headerlink" title="module object"></a>module object</h4><p>module有两个主要属性一个是exports另一个是parent。<br>接下来我们看看module.exports，按照刚才的思路，我们想输出一个参数(书名):<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//book.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Book</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">Book.prototype.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line">exports.Book = Book</span><br><span class="line"><span class="comment">//store.js</span></span><br><span class="line"><span class="keyword">var</span> Book = <span class="built_in">require</span> (<span class="string">'./book'</span>).Book</span><br><span class="line"><span class="keyword">var</span> book = <span class="keyword">new</span> Book(<span class="string">'Hello Node.js'</span>)</span><br><span class="line">book.show()</span><br></pre></td></tr></table></figure></p>
+<p>这个时候会正确的输出书名，但是这种调用方式比较麻烦，我们想将一个模块当作一个类或者一个function来使用而不是使用它的属性exports.Book。<br>那么我们需要做这样的更改：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//book.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Book</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">Book.prototype.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = Book <span class="comment">//改为module.exports</span></span><br><span class="line"><span class="comment">//store.js</span></span><br><span class="line"><span class="keyword">var</span> Book = <span class="built_in">require</span> (<span class="string">'./book'</span>) <span class="comment">//去掉属性</span></span><br><span class="line"><span class="keyword">var</span> book = <span class="keyword">new</span> Book(<span class="string">'Hello Node.js'</span>)</span><br><span class="line">book.show()</span><br></pre></td></tr></table></figure></p>
+<p>parent属性，是当一个模块被另一个模块require时，就会出现parent属性：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//book.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Book</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">Book.prototype.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = Book</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">module</span>.parent)</span><br><span class="line"><span class="comment">//store.js</span></span><br><span class="line"><span class="keyword">var</span> Book = <span class="built_in">require</span> (<span class="string">'./book'</span>)</span><br><span class="line"><span class="keyword">var</span> book = <span class="keyword">new</span> Book(<span class="string">'Hello Node.js'</span>)</span><br><span class="line">book.show()</span><br></pre></td></tr></table></figure></p>
+<p>当输出如上代码时候，执行store.js会出现下面的这个对象：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ node store.js</span><br><span class="line">Module &#123;</span><br><span class="line">  id: <span class="string">'.'</span>,</span><br><span class="line">  exports: &#123;&#125;,</span><br><span class="line">  parent: <span class="literal">null</span>,</span><br><span class="line">  filename: <span class="string">'C:\\Users\\envy\\Desktop\\store.js'</span>,</span><br><span class="line">  loaded: <span class="literal">false</span>,</span><br><span class="line">  children:</span><br><span class="line">   [ Module &#123;</span><br><span class="line">       id: <span class="string">'C:\\Users\\envy\\Desktop\\book.js'</span>,</span><br><span class="line">       exports: [<span class="built_in">Function</span>: Book],</span><br><span class="line">       parent: [Circular],</span><br><span class="line">       filename: <span class="string">'C:\\Users\\envy\\Desktop\\book.js'</span>,</span><br><span class="line">       loaded: <span class="literal">false</span>,</span><br><span class="line">       children: [],</span><br><span class="line">       paths: [<span class="built_in">Object</span>] &#125; ],</span><br><span class="line">  paths:</span><br><span class="line">   [ <span class="string">'C:\\Users\\envy\\Desktop\\node_modules'</span>,</span><br><span class="line">     <span class="string">'C:\\Users\\envy\\node_modules'</span>,</span><br><span class="line">     <span class="string">'C:\\Users\\node_modules'</span> ] &#125;</span><br><span class="line">Hello Node.js</span><br></pre></td></tr></table></figure></p>
+<p>我们看到这里store作为parent，而book作为children存在，使用这个属性我们可以判断一个模块是否独立存在：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//book.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Book</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">Book.prototype.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = Book</span><br><span class="line"><span class="keyword">if</span>(!<span class="built_in">module</span>.parent)&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(stand alone <span class="built_in">module</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//store.js</span></span><br><span class="line"><span class="keyword">var</span> Book = <span class="built_in">require</span> (<span class="string">'./book'</span>) <span class="comment">//去掉属性</span></span><br><span class="line"><span class="keyword">var</span> book = <span class="keyword">new</span> Book(<span class="string">'Hello Node.js'</span>)</span><br><span class="line">book.show()</span><br><span class="line">-------------------------------------</span><br><span class="line">$ node book.js</span><br><span class="line">stand alone <span class="built_in">module</span></span><br><span class="line">-------------------------------------</span><br><span class="line">$ node store.js</span><br><span class="line">Hello Node.js</span><br></pre></td></tr></table></figure></p>
+<h4 id="require搜索"><a href="#require搜索" class="headerlink" title="require搜索"></a>require搜索</h4><p>node里的搜索路径，用X代替*，例如<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">'./X'</span>)</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./X.js'</span>)</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./X.node'</span>)</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./X.json'</span>)</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./X.idnex.js'</span>)</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./X.index.node'</span>)</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./X.index.json'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>如果不以./开头，会按照以下路径搜索<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">'name'</span>)</span><br><span class="line">/path/to/project/node_modules/name/</span><br><span class="line">/path/to/node_modules/name</span><br><span class="line">/path/node_modules/name</span><br><span class="line">/node_modules/name</span><br></pre></td></tr></table></figure></p>
+<p>会进入到项目中node_module这个模块，里面有一个package.json文件，里面的main字段会对响应的组件提供描述。<br>除此之外还有两点需要注意：</p>
+<ul>
+<li>require有缓存，只会执行一次</li>
+<li>require可以循环使用，但可能会产生逻辑错误，所以要避免循环使用</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nodejs基础"><span class="toc-number">1.</span> <span class="toc-text">Nodejs基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#modules"><span class="toc-number">1.1.</span> <span class="toc-text">modules</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#module-wrap"><span class="toc-number">1.2.</span> <span class="toc-text">module wrap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#module-object"><span class="toc-number">1.3.</span> <span class="toc-text">module object</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#require搜索"><span class="toc-number">1.4.</span> <span class="toc-text">require搜索</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/03/28/nodejs(0)/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/03/28/nodejs(0)/&text=RE：从零开始的Node.js生活(0)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/03/28/nodejs(0)/&is_video=false&description=RE：从零开始的Node.js生活(0)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RE：从零开始的Node.js生活(0)&body=Check out this article: http://sihan.world/2017/03/28/nodejs(0)/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/03/28/nodejs(0)/&title=RE：从零开始的Node.js生活(0)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/03/28/nodejs(0)/&name=RE：从零开始的Node.js生活(0)&description=&lt;p&gt;&lt;img src=&#34;/img/6-1.png&#34; alt=&#34;6-1&#34;&gt;&lt;br&gt;从这篇文章开始我将学习Nodejs的相关内容，除此之外还将涉及到函数式编程、RESTful APL设计，MongoDB与Redis的使用，以及实时通讯技术。&lt;/p&gt;
+&lt;h3 id=&#34;Nodejs基础&#34;&gt;&lt;a href=&#34;#Nodejs基础&#34; class=&#34;headerlink&#34; title=&#34;Nodejs基础&#34;&gt;&lt;/a&gt;Nodejs基础&lt;/h3&gt;&lt;h4 id=&#34;modules&#34;&gt;&lt;a href=&#34;#modules&#34; class=&#34;headerlink&#34; title=&#34;modules&#34;&gt;&lt;/a&gt;modules&lt;/h4&gt;&lt;p&gt;这里我们使用git bash和vim来运行一段小程序&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//a.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.foo = &lt;span class=&#34;string&#34;&gt;&#39;foo&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.show = &lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(exports.foo)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//b.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; a = &lt;span class=&#34;built_in&#34;&gt;require&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&#39;./a&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(a.foo) &lt;span class=&#34;comment&#34;&gt;// -&amp;gt; foo&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;a.show() &lt;span class=&#34;comment&#34;&gt;// -&amp;gt; foo&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(&lt;span class=&#34;built_in&#34;&gt;module&lt;/span&gt;.exports == exports &lt;span class=&#34;comment&#34;&gt;// true&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;从上述例子中可以看出Nodejs中exports和require这两个基本函数是如何工作的。这其实是CMD的规范，为了更加熟悉这种格式的调用，我们再看一组代码：&lt;br&gt;&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;34&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//student.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;funciton add(student)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(&lt;span class=&#34;string&#34;&gt;&#39;add student &#39;&lt;/span&gt; + student )&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.add = add&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//其实和那种模块的写法作用上是一样的，不过如果两者同时存在，会被模块的写法覆盖掉。如果你想让你的模块成为一个特别的模块类型，那么就使用module，如果想让你的模块成为一个模块实例，那么就使用exports。&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//teacher.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;add&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;teacher&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;built_in&#34;&gt;console&lt;/span&gt;.log(&lt;span class=&#34;string&#34;&gt;&#39;add teacher &#39;&lt;/span&gt; + teacher)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.add = add&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//klass.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; student = &lt;span class=&#34;built_in&#34;&gt;require&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&#39;./student&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; teacher = &lt;span class=&#34;built_in&#34;&gt;require&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&#39;./teacher&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;add&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;teacherName,students&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	teacher.add(teacherName)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	students.forEach(&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;function&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;item,index&lt;/span&gt;)&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;		student.add(item)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &amp;#125;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exports.add = add&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//index.js&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;var&lt;/span&gt; klass = &lt;span class=&#34;built_in&#34;&gt;require&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&#39;./klass&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;klass.add(&lt;span class=&#34;string&#34;&gt;&#39;scott&#39;&lt;/span&gt;,[&lt;span class=&#34;string&#34;&gt;&#39;envy&#39;&lt;/span&gt;,&lt;span class=&#34;string&#34;&gt;&#39;greed&#39;&lt;/span&gt;])&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;--------------------&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;$ node index&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;add teacher scott&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;add student envy&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;add student greed&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

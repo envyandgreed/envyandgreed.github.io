@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="上一篇我们配置好了环境，这一篇我们来增加功能。 查询为了实现这个功能，我们应该： 1.访问index页面 2.index页面发送出查询请求 3.controller接受请求并处理 4.在list页面进行展示 我们查询请求的URL是／emps，所以我们首先在index.jsp中直接跳到查询请求 1&amp;lt;jsp:forward page=&quot;/emps&quot;&amp;gt;&amp;lt;/jsp:forward&amp;gt;">
+<meta name="keywords" content="SSM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSM实战II">
+<meta property="og:url" content="http://sihan.world/2017/08/16/SSM实战II/index.html">
+<meta property="og:site_name" content="Envy">
+<meta property="og:description" content="上一篇我们配置好了环境，这一篇我们来增加功能。 查询为了实现这个功能，我们应该： 1.访问index页面 2.index页面发送出查询请求 3.controller接受请求并处理 4.在list页面进行展示 我们查询请求的URL是／emps，所以我们首先在index.jsp中直接跳到查询请求 1&amp;lt;jsp:forward page=&quot;/emps&quot;&amp;gt;&amp;lt;/jsp:forward&amp;gt;">
+<meta property="og:locale" content="en-US">
+<meta property="og:updated_time" content="2018-01-09T02:32:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSM实战II">
+<meta name="twitter:description" content="上一篇我们配置好了环境，这一篇我们来增加功能。 查询为了实现这个功能，我们应该： 1.访问index页面 2.index页面发送出查询请求 3.controller接受请求并处理 4.在list页面进行展示 我们查询请求的URL是／emps，所以我们首先在index.jsp中直接跳到查询请求 1&amp;lt;jsp:forward page=&quot;/emps&quot;&amp;gt;&amp;lt;/jsp:forward&amp;gt;">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>SSM实战II</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 lrt">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/08/28/数据库相关/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/08/16/ssm实战/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/08/16/SSM实战II/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/08/16/SSM实战II/&text=SSM实战II"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/08/16/SSM实战II/&is_video=false&description=SSM实战II"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SSM实战II&body=Check out this article: http://sihan.world/2017/08/16/SSM实战II/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/08/16/SSM实战II/&name=SSM实战II&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#查询"><span class="toc-number">1.</span> <span class="toc-text">查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加"><span class="toc-number">2.</span> <span class="toc-text">添加</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        SSM实战II
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Envy</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-08-16T13:18:44.000Z" itemprop="datePublished">2017-08-16</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/SSM/">SSM</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>上一篇我们配置好了环境，这一篇我们来增加功能。</p>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><p>为了实现这个功能，我们应该：</p>
+<p>1.访问index页面</p>
+<p>2.index页面发送出查询请求</p>
+<p>3.controller接受请求并处理</p>
+<p>4.在list页面进行展示</p>
+<p>我们查询请求的URL是／emps，所以我们首先在index.jsp中直接跳到查询请求</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;jsp:forward page="/emps"&gt;&lt;/jsp:forward&gt;</span><br></pre></td></tr></table></figure>
+<p>接着我们要写一个处理器controller处理请求:EmployeeController,controller会调用service，service会调用dao：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmployeeController</span></span>&#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  	EmployeeSerive employeeService;</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">  	<span class="meta">@RequestMapping</span>(<span class="string">"/emps"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getEmps</span><span class="params">()</span></span>&#123;</span><br><span class="line">      </span><br><span class="line">      List&lt;Employee&gt; emps = employeeSerivce.getAll();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"list"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在处理完请求之后，我们就会跳转到list.jsp，所以我们创建list页面。不过在此之前先完成service层的创建，在这里调用了查询方法，查询所有员工：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmployeeService</span> </span>&#123;</span><br><span class="line">  	<span class="meta">@Autowired</span></span><br><span class="line">	EmployeeMapper employeeMapper;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> List&lt;Employee&gt; <span class="title">getAll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		<span class="keyword">return</span> employeeMapper.selectByExampleWithDept(<span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不过这不是分页查询，如果是分页查询则需要返回页码。这里我们使用pageHelper分页插件:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">   <span class="meta">@RequestMapping</span>(<span class="string">"/emps"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getEmps</span><span class="params">(@RequestParam(value = <span class="string">"pn"</span>, defaultValue = <span class="string">"1"</span>)</span> Integer pn,</span></span><br><span class="line"><span class="function">		Model model) </span>&#123;</span><br><span class="line">	<span class="comment">// 这不是一个分页查询；</span></span><br><span class="line">	<span class="comment">// 引入PageHelper分页插件</span></span><br><span class="line">	<span class="comment">// 在查询之前只需要调用，传入页码，以及每页的大小</span></span><br><span class="line">	PageHelper.startPage(pn, <span class="number">5</span>);</span><br><span class="line">	<span class="comment">// startPage后面紧跟的这个查询就是一个分页查询</span></span><br><span class="line">	List&lt;Employee&gt; emps = employeeService.getAll();</span><br><span class="line">	<span class="comment">// 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。</span></span><br><span class="line">	<span class="comment">// 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数</span></span><br><span class="line">	PageInfo page = <span class="keyword">new</span> PageInfo(emps, <span class="number">5</span>);</span><br><span class="line">	model.addAttribute(<span class="string">"pageInfo"</span>, page);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="string">"list"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就算获得页面了，可以使用MockMvc进行单元测试是否获取成功。</p>
+<p>接下来就是完成前端页面了，bootstrap的使用很简单，基本上就是套着用就可以了这里就不写了，官网有所有样式的事例。</p>
+<p>除了样式之外，我们还需要添加一些逻辑(jstl) ,主要是分页栏的逻辑：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;%<span class="meta">@taglib</span> uri=<span class="string">"http://java.sun.com/jsp/jstl/core"</span> prefix=<span class="string">"c"</span>%&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;!-- 显示表格数据 --&gt;</span><br><span class="line">&lt;table <span class="class"><span class="keyword">class</span></span>=<span class="string">"table table-hover"</span>&gt;</span><br><span class="line">					&lt;tr&gt;</span><br><span class="line">						&lt;th&gt;#&lt;/th&gt;</span><br><span class="line">						&lt;th&gt;empName&lt;/th&gt;</span><br><span class="line">						&lt;th&gt;gender&lt;/th&gt;</span><br><span class="line">						&lt;th&gt;email&lt;/th&gt;</span><br><span class="line">						&lt;th&gt;deptName&lt;/th&gt;</span><br><span class="line">						&lt;th&gt;操作&lt;/th&gt;</span><br><span class="line">					&lt;/tr&gt;</span><br><span class="line">					&lt;c:forEach items=<span class="string">"$&#123;pageInfo.list &#125;"</span> <span class="keyword">var</span>=<span class="string">"emp"</span>&gt;</span><br><span class="line">						&lt;tr&gt;</span><br><span class="line">							&lt;th&gt;$&#123;emp.empId &#125;&lt;/th&gt;</span><br><span class="line">							&lt;th&gt;$&#123;emp.empName &#125;&lt;/th&gt;</span><br><span class="line">							&lt;th&gt;$&#123;emp.gender=="M"?"男":"女" &#125;&lt;/th&gt;</span><br><span class="line">							&lt;th&gt;$&#123;emp.email &#125;&lt;/th&gt;</span><br><span class="line">							&lt;th&gt;$&#123;emp.department.deptName &#125;&lt;/th&gt;</span><br><span class="line">							&lt;th&gt;</span><br><span class="line">								&lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-primary btn-sm"</span>&gt;</span><br><span class="line">									&lt;span class="glyphicon glyphicon-pencil" aria-hidden="true"&gt;&lt;/span&gt;</span><br><span class="line">									编辑</span><br><span class="line">								&lt;/button&gt;</span><br><span class="line">								&lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-danger btn-sm"</span>&gt;</span><br><span class="line">									&lt;span class="glyphicon glyphicon-trash" aria-hidden="true"&gt;&lt;/span&gt;</span><br><span class="line">									删除</span><br><span class="line">								&lt;/button&gt;</span><br><span class="line">							&lt;/th&gt;</span><br><span class="line">						&lt;/tr&gt;</span><br><span class="line">					&lt;/c:forEach&gt;</span><br><span class="line">				&lt;/table&gt;</span><br></pre></td></tr></table></figure>
+<p>现在可以返回一个正常的页面的，但是如果想要返回json对象呢？</p>
+<p>为此我们需要新增一个bean，Msg用于存储返回内容和自定义状态：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Msg</span> </span>&#123;</span><br><span class="line">	<span class="comment">//状态码   100-成功    200-失败</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> code;</span><br><span class="line">	<span class="comment">//提示信息</span></span><br><span class="line">	<span class="keyword">private</span> String msg;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//用户要返回给浏览器的数据</span></span><br><span class="line">	<span class="keyword">private</span> Map&lt;String, Object&gt; extend = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Msg <span class="title">success</span><span class="params">()</span></span>&#123;</span><br><span class="line">		Msg result = <span class="keyword">new</span> Msg();</span><br><span class="line">		result.setCode(<span class="number">100</span>);</span><br><span class="line">		result.setMsg(<span class="string">"处理成功！"</span>);</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Msg <span class="title">fail</span><span class="params">()</span></span>&#123;</span><br><span class="line">		Msg result = <span class="keyword">new</span> Msg();</span><br><span class="line">		result.setCode(<span class="number">200</span>);</span><br><span class="line">		result.setMsg(<span class="string">"处理失败！"</span>);</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Msg <span class="title">add</span><span class="params">(String key,Object value)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.getExtend().put(key, value);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> code;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCode</span><span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.code = code;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> msg;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.msg = msg;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title">getExtend</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> extend;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setExtend</span><span class="params">(Map&lt;String, Object&gt; extend)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.extend = extend;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此外controller也要在返回的地方进行更改，原先是返回list，现在要改成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> Msg.success().add(<span class="string">"pageInfo"</span>, page);</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以收到json数据了(需要使用jackson，在controller上面添加@ResponseBody)。</p>
+<p>我们原先的流程是首页发送请求，处理请求后跳转到list页面，由于现在是直接获取数据了，所以我们的流程改为首页发出Ajax请求，服务器返回json数据，js进行解析之后渲染页面。所以我们的页面逻辑也就从jsp编程jquery,将jstl语句全都改成jquery编写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">$(function()&#123;</span><br><span class="line">			<span class="comment">//去首页</span></span><br><span class="line">			to_page(<span class="number">1</span>);</span><br><span class="line">		&#125;);</span><br><span class="line">		</span><br><span class="line">		<span class="function">function <span class="title">to_page</span><span class="params">(pn)</span></span>&#123;</span><br><span class="line">			$.ajax(&#123;</span><br><span class="line">				url:<span class="string">"$&#123;APP_PATH&#125;/emps"</span>,</span><br><span class="line">				data:<span class="string">"pn="</span>+pn,</span><br><span class="line">				type:<span class="string">"GET"</span>,</span><br><span class="line">				success:function(result)&#123;</span><br><span class="line">					<span class="comment">//console.log(result);</span></span><br><span class="line">					<span class="comment">//1、解析并显示员工数据</span></span><br><span class="line">					build_emps_table(result);</span><br><span class="line">					<span class="comment">//2、解析并显示分页信息</span></span><br><span class="line">					build_page_info(result);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="function">function <span class="title">build_emps_table</span><span class="params">(result)</span></span>&#123;</span><br><span class="line">			<span class="keyword">var</span> emps = result.extend.pageInfo.list;</span><br><span class="line">			$.each(emps,function(index,item)&#123;</span><br><span class="line">				<span class="keyword">var</span> checkBoxTd = $(<span class="string">"&lt;td&gt;&lt;input type='checkbox' class='check_item'/&gt;&lt;/td&gt;"</span>);</span><br><span class="line">				<span class="keyword">var</span> empIdTd = $(<span class="string">"&lt;td&gt;&lt;/td&gt;"</span>).append(item.empId);</span><br><span class="line">				<span class="keyword">var</span> empNameTd = $(<span class="string">"&lt;td&gt;&lt;/td&gt;"</span>).append(item.empName);</span><br><span class="line">				<span class="keyword">var</span> genderTd = $(<span class="string">"&lt;td&gt;&lt;/td&gt;"</span>).append(item.gender==<span class="string">'M'</span>?<span class="string">"男"</span>:<span class="string">"女"</span>);</span><br><span class="line">				<span class="keyword">var</span> emailTd = $(<span class="string">"&lt;td&gt;&lt;/td&gt;"</span>).append(item.email);</span><br><span class="line">				<span class="keyword">var</span> deptNameTd = $(<span class="string">"&lt;td&gt;&lt;/td&gt;"</span>).append(item.department.deptName);</span><br><span class="line">				<span class="comment">/**</span></span><br><span class="line"><span class="comment">				参照这个样式</span></span><br><span class="line"><span class="comment">				&lt;button class=""&gt;</span></span><br><span class="line"><span class="comment">									&lt;span class="" aria-hidden="true"&gt;&lt;/span&gt;</span></span><br><span class="line"><span class="comment">									编辑</span></span><br><span class="line"><span class="comment">								&lt;/button&gt;</span></span><br><span class="line"><span class="comment">				*/</span></span><br><span class="line">				<span class="keyword">var</span> editBtn = $(<span class="string">"&lt;button&gt;&lt;/button&gt;"</span>).addClass(<span class="string">"btn btn-primary btn-sm edit_btn"</span>)</span><br><span class="line">								.append($(<span class="string">"&lt;span&gt;&lt;/span&gt;"</span>).addClass(<span class="string">"glyphicon glyphicon-pencil"</span>)).append(<span class="string">"编辑"</span>);</span><br><span class="line">				<span class="comment">//为编辑按钮添加一个自定义的属性，来表示当前员工id</span></span><br><span class="line">				editBtn.attr(<span class="string">"edit-id"</span>,item.empId);</span><br><span class="line">				<span class="keyword">var</span> delBtn =  $(<span class="string">"&lt;button&gt;&lt;/button&gt;"</span>).addClass(<span class="string">"btn btn-danger btn-sm delete_btn"</span>)</span><br><span class="line">								.append($(<span class="string">"&lt;span&gt;&lt;/span&gt;"</span>).addClass(<span class="string">"glyphicon glyphicon-trash"</span>)).append(<span class="string">"删除"</span>);</span><br><span class="line">				<span class="comment">//放到一个单元格里</span></span><br><span class="line">				<span class="keyword">var</span> btnTd = $(<span class="string">"&lt;td&gt;&lt;/td&gt;"</span>).append(editBtn).append(<span class="string">" "</span>).append(delBtn);</span><br><span class="line">				<span class="comment">//var delBtn = </span></span><br><span class="line">				<span class="comment">//append方法执行完成以后还是返回原来的元素</span></span><br><span class="line">				$(<span class="string">"&lt;tr&gt;&lt;/tr&gt;"</span>).append(checkBoxTd)</span><br><span class="line">					.append(empIdTd)</span><br><span class="line">					.append(empNameTd)</span><br><span class="line">					.append(genderTd)</span><br><span class="line">					.append(emailTd)</span><br><span class="line">					.append(deptNameTd)</span><br><span class="line">					.append(btnTd)</span><br><span class="line">					.appendTo(<span class="string">"#emps_table tbody"</span>);</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<p>这事表格的现实，还有分页内容的现实，实现逻辑和jsp其实一样这里就不粘贴代码了。</p>
+<h2 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h2><p>添加的效果就是点击按钮之后，弹出模态框，由于设置里面有部门选项，所以弹出之后需要发送一个请求来获取相应信息。弹出模态框的样式在bootstrap的官方文档里都有，可以直接拿过来用。</p>
+<p>既然用到处理请求，那么肯定就需要用到controller，这次需要新增一个dept部门的控制层，当然也要声明对应的service层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DepartmentController</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">private</span> DepartmentService departmentService;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 返回所有的部门信息</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/depts"</span>)</span><br><span class="line">	<span class="meta">@ResponseBody</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Msg <span class="title">getDepts</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//查出的所有部门信息</span></span><br><span class="line">		List&lt;Department&gt; list = departmentService.getDepts();</span><br><span class="line">		<span class="keyword">return</span> Msg.success().add(<span class="string">"depts"</span>, list);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在更改表格样式之后就应该实现ajax请求了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//点击新增按钮弹出模态框。</span></span><br><span class="line">		$(<span class="string">"#emp_add_modal_btn"</span>).click(function()&#123;</span><br><span class="line">			<span class="comment">//发送ajax请求，查出部门信息，显示在下拉列表中</span></span><br><span class="line">			getDepts(<span class="string">"#empAddModal select"</span>);</span><br><span class="line">			<span class="comment">//弹出模态框</span></span><br><span class="line">			$(<span class="string">"#empAddModal"</span>).modal(&#123;</span><br><span class="line">				backdrop:<span class="string">"static"</span></span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//查出所有的部门信息并显示在下拉列表中</span></span><br><span class="line">		<span class="function">function <span class="title">getDepts</span><span class="params">(ele)</span></span>&#123;</span><br><span class="line">			$.ajax(&#123;</span><br><span class="line">				url:<span class="string">"$&#123;APP_PATH&#125;/depts"</span>,</span><br><span class="line">				type:<span class="string">"GET"</span>,</span><br><span class="line">				success:function(result)&#123;</span><br><span class="line">					$.each(result.extend.depts,function()&#123;</span><br><span class="line">						<span class="keyword">var</span> optionEle = $(<span class="string">"&lt;option&gt;&lt;/option&gt;"</span>).append(<span class="keyword">this</span>.deptName).attr(<span class="string">"value"</span>,<span class="keyword">this</span>.deptId);</span><br><span class="line">						optionEle.appendTo(ele);</span><br><span class="line">					&#125;);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<p>这样下拉列表里面就有部门信息了。在弹出模态框之后，在我们单击保存之后，将进行保存，完成的方式是，在controller声明一个存储的方法，因为是rest风格URI所以我们要自己规定请求的方式，这里使用POST请求，当然controller需要调用相应的service层，在service层中采用自动生成的employeeMapper.insertSelective(employee);方法来存储数据，最后在controller层返回Msg的成功函数。返回数据之后，我们写一个onclick事件，当用户单击保存按钮后我们post提交表单，这里需要借助jquery的serialize函数序列化一下表单的字符串，之后还要自动关闭模态框，并跳转到最新一页。此外我们还可以通过正则表达式，来进行邮箱、用户名的校验。</p>
+<p>跟后台相关的校验是用户名和邮箱是否重复。检测的思路就是，当输入框状态change的时候，我们使用ajax发送请求，将文本信息post给服务器，controller继续调用service层进行处理，这里我们采用一个叫做Criteria查询数据库中是否存在用户名，xml和函数都是mybatis generator帮我们创建好的:</p>
+<p>service层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">checkUser</span><span class="params">(String empName)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		EmployeeExample example = <span class="keyword">new</span> EmployeeExample();</span><br><span class="line">		Criteria criteria = example.createCriteria();</span><br><span class="line">		criteria.andEmpNameEqualTo(empName);</span><br><span class="line">		<span class="keyword">long</span> count = employeeMapper.countByExample(example);</span><br><span class="line">		<span class="keyword">return</span> count == <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>controller层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ResponseBody</span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/checkuser"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Msg <span class="title">checkuser</span><span class="params">(@RequestParam(<span class="string">"empName"</span>)</span>String empName)</span>&#123;</span><br><span class="line">		<span class="comment">//数据库用户名重复校验</span></span><br><span class="line">		<span class="keyword">boolean</span> b = employeeService.checkUser(empName);</span><br><span class="line">		<span class="keyword">if</span>(b)&#123;</span><br><span class="line">			<span class="keyword">return</span> Msg.success();</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="keyword">return</span> Msg.fail().add(<span class="string">"va_msg"</span>, <span class="string">"用户名不可用"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>Jquery写法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//校验用户名是否可用</span></span><br><span class="line">		$(<span class="string">"#empName_add_input"</span>).change(function()&#123;</span><br><span class="line">			<span class="comment">//发送ajax请求校验用户名是否可用</span></span><br><span class="line">			<span class="keyword">var</span> empName = <span class="keyword">this</span>.value;</span><br><span class="line">			$.ajax(&#123;</span><br><span class="line">				url:<span class="string">"$&#123;APP_PATH&#125;/checkuser"</span>,</span><br><span class="line">				data:<span class="string">"empName="</span>+empName,</span><br><span class="line">				type:<span class="string">"POST"</span>,</span><br><span class="line">				success:function(result)&#123;</span><br><span class="line">					<span class="keyword">if</span>(result.code==<span class="number">100</span>)&#123;</span><br><span class="line">						show_validate_msg(<span class="string">"#empName_add_input"</span>,<span class="string">"success"</span>,<span class="string">"用户名可用"</span>);</span><br><span class="line">						$(<span class="string">"#emp_save_btn"</span>).attr(<span class="string">"ajax-va"</span>,<span class="string">"success"</span>);</span><br><span class="line">					&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">						show_validate_msg(<span class="string">"#empName_add_input"</span>,<span class="string">"error"</span>,result.extend.va_msg);</span><br><span class="line">						$(<span class="string">"#emp_save_btn"</span>).attr(<span class="string">"ajax-va"</span>,<span class="string">"error"</span>);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;);</span><br></pre></td></tr></table></figure>
+<p>这样就可以检测是否存在同名的用户名了，邮箱用同一种做法。此外为了进一步加强校验，我们可以使用JSR303，他的作用就是后端进一步校验。使用方法很简单，先在bean里面添加校验规则，采用注解的方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pattern</span>(regexp=<span class="string">"(^[a-zA-Z0-9_-]&#123;6,16&#125;$)|(^[\u2E80-\u9FFF]&#123;2,5&#125;)"</span></span><br><span class="line">    		,message=<span class="string">"用户名必须是2-5位中文或者6-16位英文和数字的组合"</span>)</span><br><span class="line">    <span class="keyword">private</span> String empName;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//@Email</span></span><br><span class="line">    <span class="meta">@Pattern</span>(regexp=<span class="string">"^([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]&#123;2,6&#125;)$"</span>,</span><br><span class="line">    		message=<span class="string">"邮箱格式不正确"</span>)</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之后在controller里添加相应的规则，在参数中添加@Valid和返回结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value=<span class="string">"/emp"</span>,method=RequestMethod.POST)</span><br><span class="line">	<span class="meta">@ResponseBody</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Msg <span class="title">saveEmp</span><span class="params">(@Valid Employee employee,BindingResult result)</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(result.hasErrors())&#123;</span><br><span class="line">			<span class="comment">//校验失败，应该返回失败，在模态框中显示校验失败的错误信息</span></span><br><span class="line">			Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">			List&lt;FieldError&gt; errors = result.getFieldErrors();</span><br><span class="line">			<span class="keyword">for</span> (FieldError fieldError : errors) &#123;</span><br><span class="line">				System.out.println(<span class="string">"错误的字段名："</span>+fieldError.getField());</span><br><span class="line">				System.out.println(<span class="string">"错误信息："</span>+fieldError.getDefaultMessage());</span><br><span class="line">				map.put(fieldError.getField(), fieldError.getDefaultMessage());</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> Msg.fail().add(<span class="string">"errorFields"</span>, map);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			employeeService.saveEmp(employee);</span><br><span class="line">			<span class="keyword">return</span> Msg.success();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>删除和修改的思路与之前的相同，这里就不重复贴代码了，需要注意的是修改时我们使用的put方式，但是ajax可能不支持这种方法，我们需要在过滤器中添加HttpPutFormContentFilter才能实现。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#查询"><span class="toc-number">1.</span> <span class="toc-text">查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加"><span class="toc-number">2.</span> <span class="toc-text">添加</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://sihan.world/2017/08/16/SSM实战II/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://sihan.world/2017/08/16/SSM实战II/&text=SSM实战II"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://sihan.world/2017/08/16/SSM实战II/&is_video=false&description=SSM实战II"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SSM实战II&body=Check out this article: http://sihan.world/2017/08/16/SSM实战II/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://sihan.world/2017/08/16/SSM实战II/&title=SSM实战II"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://sihan.world/2017/08/16/SSM实战II/&name=SSM实战II&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Envy
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/envyandgreed">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
